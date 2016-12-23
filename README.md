@@ -12,7 +12,9 @@ _A simple node/browser graph database_
 	- **`label`**: `String` _Optional_
 	- **`data`**: `Object`
 
-- `.edge(label, properties)`
+- `.edge(from, to, label, properties)`
+  - **`from`: `Object` _Node where edge originates_
+  - **`to`: `Object` _Node where edge goes_
 	- **`label`**: `String` _Optional_
 	- **`properties`**: `Object`
 
