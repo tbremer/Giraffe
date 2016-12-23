@@ -1,5 +1,35 @@
 console.clear();
 
+function Node({id, label, data}) {
+  const obj = Object.create(null);
+  const node = Object.defineProperties(obj, {
+    _id: { value: id },
+    label: { value: label }
+  });
+
+  for (const key in data) {
+    Object.defineProperty(node, key, { value: data[key] })
+  }
+
+  return node;
+}
+
+function Edge({ id, label, from, through, data }) {
+  const obj = Object.create(null);
+  const edge = Object.defineProperties(obj, {
+    _id: { value: id },
+    from: {value: from._id},
+    through: { value: through._id },
+    label: { value: label }
+  });
+
+  for (const key in data) {
+    Object.defineProperty(edge, key, { value: data[key] })
+  }
+
+  return edge;
+}
+
 function Graff() {
   this.nodes = [];
   this.edges = [];
@@ -17,13 +47,11 @@ function Graff() {
 Graff.prototype.create = function create (label, data) {
   if (label.constructor === Object) {
     data = label;
-    label = '';
+    label = null;
   }
 
-  const node = {
-    _id: this.nodes.length + 1,
-    ...data
-  };
+  const id = this.nodes.length + 1;
+  const node = new Node({ id, label, data });
 
   this.nodes = [...this.nodes, node];
 
@@ -37,14 +65,9 @@ Graff.prototype.create = function create (label, data) {
   return node;
 };
 
-Graff.prototype.edge = function edge (from, to, label, props) {
-  const edg = {
-    _id: this.edges.length + 1,
-    from: from._id,
-    to: to._id,
-    label,
-    ...props
-  };
+Graff.prototype.edge = function edge (from, through, label, data) {
+  const id = this.edges.length + 1;
+  const edg = new Edge({ id, from, through, label, data });
 
   this.edges = [ ...this.edges, edg ];
 
