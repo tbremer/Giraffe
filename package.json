@@ -1,0 +1,30 @@
+{
+  "name": "graff",
+  "version": "1.0.0",
+  "description": "Lightweight Graph DB implementation",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbremer/graff.js.git"
+  },
+  "keywords": [
+    "graph",
+    "database"
+  ],
+  "author": "Tom Bremer <tom@tbremer.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tbremer/graff.js/issues"
+  },
+  "homepage": "https://github.com/tbremer/graff.js#readme",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "rollup": "^0.38.0",
+    "rollup-plugin-babel": "^2.7.1"
+  }
+}
