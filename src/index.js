@@ -1,34 +1,4 @@
-console.clear();
-
-function Node({id, label, data}) {
-  const obj = Object.create(null);
-  const node = Object.defineProperties(obj, {
-    _id: { value: id },
-    label: { value: label }
-  });
-
-  for (const key in data) {
-    Object.defineProperty(node, key, { value: data[key] })
-  }
-
-  return node;
-}
-
-function Edge({ id, label, from, through, data }) {
-  const obj = Object.create(null);
-  const edge = Object.defineProperties(obj, {
-    _id: { value: id },
-    from: {value: from._id},
-    through: { value: through._id },
-    label: { value: label }
-  });
-
-  for (const key in data) {
-    Object.defineProperty(edge, key, { value: data[key] })
-  }
-
-  return edge;
-}
+import { Node, Edge, mergePaths } from './lib';
 
 function Graff() {
   this.nodes = [];
@@ -36,11 +6,6 @@ function Graff() {
   this.labels = {
     edges: {},
     nodes: {}
-  };
-  this.db = {
-    nodes: this.nodes,
-    edges: this.edges,
-    labels: this.labels
   };
 }
 
@@ -50,7 +15,7 @@ Graff.prototype.create = function create (label, data) {
     label = null;
   }
 
-  const id = this.nodes.length + 1;
+  const id = this.nodes.length;
   const node = new Node({ id, label, data });
 
   this.nodes = [...this.nodes, node];
@@ -66,8 +31,10 @@ Graff.prototype.create = function create (label, data) {
 };
 
 Graff.prototype.edge = function edge (from, through, label, data) {
-  const id = this.edges.length + 1;
+  const id = this.edges.length;
   const edg = new Edge({ id, from, through, label, data });
+
+  from._edges.push(id);
 
   this.edges = [ ...this.edges, edg ];
 
@@ -81,18 +48,29 @@ Graff.prototype.edge = function edge (from, through, label, data) {
   return edg;
 };
 
+Graff.prototype.query = function query (label, properties) {
+  if (!label && !properties) label = properties = null;
+
+  if (label && label.constructor === Object) {
+    properties = label;
+    label = null;
+  }
+
+  return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
+};
+
 // Graff.prototype.remove = function remove () {};
 // Graff.prototype.removeEdge = function removeEdge () {};
-// Graff.prototype.query = function query () {};
 
-const Person = 'person';
-const ab = new Graff();
 
-const one = ab.create({ foo: 'bar' });
-const two = ab.create(Person, { baz: 'bing' });
-const edge = ab.edge(one, two, 'LOVES')
 
-console.log(one);
-console.log(two);
-console.log(edge);
-console.log(ab);
+// const Person = 'person';
+// const ab = new Graff();
+
+// const one = ab.create({ foo: 'bar' });
+// const two = ab.create(Person, { baz: 'bing' });
+// const three = ab.create(Person, { monkey: 'coconut' });
+// // const edge = ab.edge(one, two, 'LOVES');
+// // const edge2 = ab.edge(two, one, 'LOVES');
+// // const edge3 = ab.edge(one, three, 'LOVES');
+// // const query = ab.query({ foo: 'b
