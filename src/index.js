@@ -64,13 +64,15 @@ Graff.prototype.query = function query (label, properties) {
 
 
 
-// const Person = 'person';
-// const ab = new Graff();
+const Person = 'person';
+const ab = new Graff();
 
-// const one = ab.create({ foo: 'bar' });
-// const two = ab.create(Person, { baz: 'bing' });
-// const three = ab.create(Person, { monkey: 'coconut' });
+ab.create({ foo: 'bar' });
+ab.create(Person, { baz: 'bing' });
+ab.create(Person, { monkey: 'coconut' });
 // // const edge = ab.edge(one, two, 'LOVES');
 // // const edge2 = ab.edge(two, one, 'LOVES');
 // // const edge3 = ab.edge(one, three, 'LOVES');
-// // const query = ab.query({ foo: 'b
+const query = ab.query({ foo: 'bar' });
+
+  console.log(query);
