@@ -59,20 +59,4 @@ Graff.prototype.query = function query (label, properties) {
   return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
 };
 
-// Graff.prototype.remove = function remove () {};
-// Graff.prototype.removeEdge = function removeEdge () {};
-
-
-
-const Person = 'person';
-const ab = new Graff();
-
-ab.create({ foo: 'bar' });
-ab.create(Person, { baz: 'bing' });
-ab.create(Person, { monkey: 'coconut' });
-// // const edge = ab.edge(one, two, 'LOVES');
-// // const edge2 = ab.edge(two, one, 'LOVES');
-// // const edge3 = ab.edge(one, three, 'LOVES');
-const query = ab.query({ foo: 'bar' });
-
-  console.log(query);
+window.Graff = Graff;

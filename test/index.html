@@ -3,9 +3,53 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style>
+		.display {
+			font-family: monospace;
+			white-space: pre;
+		}
+	</style>
 </head>
 <body>
-	<h1>Hello World</h1>
+	<section class="form">
+		<input type="text" name="person" placeholder="name" />
+		<hr />
+		<input type="text" name="search" placeholder="Search for a Person" />
+
+	</section>
+	<section class="display"></section>
+
 	<script src="../dist/bundle.js"></script>
+	<script>
+		const db = new Graff();
+		const person=document.querySelector('input[name="person"]');
+		const search=document.querySelector('input[name="search"]');
+		const display = document.getElementsByClassName('display')[0];
+
+		function Person(name) {
+			return db.create('Person', { name });
+		}
+
+		function actionOnEnter(e, cb) {
+			e.preventDefault();
+			const { keyCode } = e;
+
+			if (keyCode !== 13) return;
+			cb();
+		}
+
+		person.addEventListener('keyup', e => actionOnEnter(e, () => {
+			const node = new Person(e.target.value);
+
+			e.target.value = '';
+		}));
+
+		search.addEventListener('keyup', e => actionOnEnter(e, () => {
+			const results = db.query('Person', {name: e.target.value});
+			e.target.value = '';
+
+			display.innerHTML = JSON.stringify(results, null, 2);
+		}));
+	</script>
 </body>
 </html>

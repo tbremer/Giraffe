@@ -23,7 +23,7 @@ export function mergePaths(label, properties, { nodes, edges, labels }) {
     const node = nodes[idx];
 
     if (label && label !== node.label) continue;
-    if (!nodeEquality(properties, node)) continue;
+    if (!nodeEquality(label, properties, node)) continue;
 
     const obj = generateNode(node);
 
