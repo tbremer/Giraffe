@@ -22,7 +22,7 @@
 			<input type="text" name="search" placeholder="Search for a Person" />
 		</fieldset>
 
-		<fieldset>
+		<fieldset class="js-link-people">
 			<legend>Link two People</legend>
 			<select name="person-a"></select>
 			<input type="text" name="edge" placeholder="Connection" />
@@ -30,17 +30,66 @@
 			<button type="button" class="js-crete-edge">submit</button>
 		</fieldset>
 
+		<fieldset>
+			<legend>Remove a Person</legend>
+			<select multiple name="person"></select>
+			<button type="button" class="js-remove-person">remove</button>
+		</fieldset>
+
 	</section>
 	<section class="display"></section>
 
 	<script src="../dist/bundle.js"></script>
 	<script>
+		/* eslint-disable */
 		const db = new Graff();
 		const person = document.querySelector('input[name="person"]');
 		const search = document.querySelector('input[name="search"]');
 		const display = document.getElementsByClassName('display')[0];
-		const selects = document.querySelectorAll('select');
-		const button = document.getElementsByClassName('js-crete-edge')[0];
+		const allSelects = document.querySelectorAll('select');
+		const createButton = document.querySelector('.js-crete-edge');
+		const removeButton = document.querySelector('.js-remove-person');
+
+		function removeOptions(nodes) {
+			const ids = nodes.map(n => n._id);
+
+			for (const i in ids) {
+				const id = ids[i];
+
+				allSelects.forEach(select => {
+					const node = select.querySelector(`[data-id="${id}"]`);
+
+					if (!node) return;
+					select.removeChild(node);
+				})
+			}
+
+			console.log('all removed');
+		}
+
+		function updateSelects() {
+			// allSelects.innerHTML = '';
+			const nodes = db.query('Person');
+			const validIds = nodes.map(n => String(n._id));
+
+			for (const i in nodes) {
+				const node = nodes[i];
+				const { _id: id, name } = node;
+
+				allSelects.forEach(select => {
+					const exists = select.querySelector(`[data-id="${id}"]`);
+					if (exists) return;
+
+					const option = document.createElement('option');
+					option.innerText = option.value = name;
+					option.setAttribute('data-id', id);
+
+					select.appendChild(option);
+				});
+			}
+
+			console.log('allUpdated');
+		}
 
 		function Person(name) {
 			return db.create('Person', { name });
@@ -61,11 +110,7 @@
 			e.target.value = '';
 			new Person(name);
 
-			const option = document.createElement('option');
-			option.innerText = option.value = name;
-
-			selects.forEach(node => node.appendChild(option.cloneNode(true)));
-
+			updateSelects();
 		}));
 
 		search.addEventListener('keyup', e => actionOnEnter(e, () => {
@@ -75,10 +120,11 @@
 			display.innerHTML = JSON.stringify(results, null, 2);
 		}));
 
-		button.addEventListener('click', e => {
+		createButton.addEventListener('click', e => {
 			const { target } = e;
 			const people = [];
 			const edgeLabel = target.parentNode.querySelector('input[name="edge"]').value;
+			const selects = target.parentNode.querySelectorAll('select');
 
 			selects.forEach(n => {
 				const node = db.query('Person', { name: n.value });
@@ -89,6 +135,22 @@
 
 			db.edge(a, b, edgeLabel);
 		});
+
+		removeButton.addEventListener('click', e => {
+			const { target } = e;
+			const people = [];
+			const options = target.parentNode.querySelectorAll('select option')
+
+			options.forEach(n => {
+				if (!n.selected) return;
+				const node = db.query('Person', { name: n.value });
+				people.push(...node);
+			});
+
+			db.remove(people);
+			updateSelects();
+			removeOptions(people);
+		})
 	</script>
 </body>
 </html>

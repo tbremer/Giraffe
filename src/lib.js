@@ -1,4 +1,3 @@
-const writable = true;
 const enumerable = true;
 
 function nodeEquality(searchObj, node) {
@@ -12,20 +11,44 @@ function nodeEquality(searchObj, node) {
   return true;
 }
 
-export function mergePaths(label, properties, { nodes, edges, labels }) {
+function createObjFromNode(node) {
+  const _node = Object.assign(
+    Object.create(null),
+    node
+  );
+
+  return _node;
+}
+
+function addDataToObj(obj, data) {
+  if (!data) return obj;
+
+  for (const key in data) {
+    Object.defineProperty(obj, key, { enumerable, value: data[key] });
+  }
+
+  return obj;
+}
+
+export function mergePaths(label, properties, { nodes, edges/*, labels */ }) {
   const objects = [];
 
   for (const idx in nodes) {
     const node = nodes[idx];
 
+    if (!node) continue;
+
     if (label && label !== node.label) continue;
     if (!nodeEquality(properties, node)) continue;
 
-    const obj = node;
+    const obj = createObjFromNode(node);
 
     for (const idx in node._edges) {
       const edgeId = node._edges[idx];
       const edge = edges[edgeId];
+
+      if (!edge) continue;
+
       const { label } = edge;
       const throughNode = nodes[edge.through];
 
@@ -40,19 +63,15 @@ export function mergePaths(label, properties, { nodes, edges, labels }) {
   return objects;
 }
 
-export function Node({id, label, data}) {
+export function Node({ id, label, data }) {
   const obj = Object.create(null);
   const node = Object.defineProperties(obj, {
-    _id: { value: id, enumerable },
-    _edges: { value: [], writable },
-    label: { value: label, enumerable }
+    _id: { enumerable, value: id },
+    _edges: { enumerable, value: [] },
+    label: { enumerable, value: label }
   });
 
-  for (const key in data) {
-    Object.defineProperty(node, key, { value: data[key], enumerable })
-  }
-
-  return node;
+  return addDataToObj(node, data);
 }
 
 export function Edge({ id, label, from, through, data }) {
@@ -64,9 +83,5 @@ export function Edge({ id, label, from, through, data }) {
     label: { value: label }
   });
 
-  for (const key in data) {
-    Object.defineProperty(edge, key, { value: data[key] })
-  }
-
-  return edge;
+  return addDataToObj(edge, data);
 }
