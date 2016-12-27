@@ -63,8 +63,6 @@
 					select.removeChild(node);
 				})
 			}
-
-			console.log('all removed');
 		}
 
 		function updateSelects() {
@@ -87,8 +85,6 @@
 					select.appendChild(option);
 				});
 			}
-
-			console.log('allUpdated');
 		}
 
 		function Person(name) {
@@ -148,8 +144,9 @@
 			});
 
 			db.remove(people);
-			updateSelects();
+			console.log('allRemoved');
 			removeOptions(people);
+			console.log('allRemoved from ui');
 		})
 	</script>
 </body>
