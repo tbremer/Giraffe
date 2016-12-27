@@ -12,9 +12,23 @@
 </head>
 <body>
 	<section class="form">
-		<input type="text" name="person" placeholder="name" />
-		<hr />
-		<input type="text" name="search" placeholder="Search for a Person" />
+		<fieldset>
+			<legend>Add a Person</legend>
+			<input type="text" name="person" placeholder="name" />
+		</fieldset>
+
+		<fieldset>
+			<legend>Search for a Person</legend>
+			<input type="text" name="search" placeholder="Search for a Person" />
+		</fieldset>
+
+		<fieldset>
+			<legend>Link two People</legend>
+			<select name="person-a"></select>
+			<input type="text" name="edge" placeholder="Connection" />
+			<select name="person-b"></select>
+			<button type="button" class="js-crete-edge">submit</button>
+		</fieldset>
 
 	</section>
 	<section class="display"></section>
@@ -22,9 +36,11 @@
 	<script src="../dist/bundle.js"></script>
 	<script>
 		const db = new Graff();
-		const person=document.querySelector('input[name="person"]');
-		const search=document.querySelector('input[name="search"]');
+		const person = document.querySelector('input[name="person"]');
+		const search = document.querySelector('input[name="search"]');
 		const display = document.getElementsByClassName('display')[0];
+		const selects = document.querySelectorAll('select');
+		const button = document.getElementsByClassName('js-crete-edge')[0];
 
 		function Person(name) {
 			return db.create('Person', { name });
@@ -39,9 +55,17 @@
 		}
 
 		person.addEventListener('keyup', e => actionOnEnter(e, () => {
-			const node = new Person(e.target.value);
+			const { target } = e;
+			const { value: name } = target;
 
 			e.target.value = '';
+			new Person(name);
+
+			const option = document.createElement('option');
+			option.innerText = option.value = name;
+
+			selects.forEach(node => node.appendChild(option.cloneNode(true)));
+
 		}));
 
 		search.addEventListener('keyup', e => actionOnEnter(e, () => {
@@ -50,6 +74,21 @@
 
 			display.innerHTML = JSON.stringify(results, null, 2);
 		}));
+
+		button.addEventListener('click', e => {
+			const { target } = e;
+			const people = [];
+			const edgeLabel = target.parentNode.querySelector('input[name="edge"]').value;
+
+			selects.forEach(n => {
+				const node = db.query('Person', { name: n.value });
+				people.push(node);
+			});
+
+			const [a, b] = people;
+
+			db.edge(a, b, edgeLabel);
+		});
 	</script>
 </body>
 </html>

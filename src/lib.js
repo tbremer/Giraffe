@@ -12,10 +12,6 @@ function nodeEquality(searchObj, node) {
   return true;
 }
 
-function generateNode(node) {
-  return Object.assign(Object.create(null), node);
-}
-
 export function mergePaths(label, properties, { nodes, edges, labels }) {
   const objects = [];
 
@@ -23,9 +19,9 @@ export function mergePaths(label, properties, { nodes, edges, labels }) {
     const node = nodes[idx];
 
     if (label && label !== node.label) continue;
-    if (!nodeEquality(label, properties, node)) continue;
+    if (!nodeEquality(properties, node)) continue;
 
-    const obj = generateNode(node);
+    const obj = node;
 
     for (const idx in node._edges) {
       const edgeId = node._edges[idx];
@@ -35,7 +31,7 @@ export function mergePaths(label, properties, { nodes, edges, labels }) {
 
       if (!(label in obj)) obj[label] = [];
 
-      obj[label].push(generateNode(throughNode));
+      obj[label].push(throughNode);
     }
 
     objects.push(obj);

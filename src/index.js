@@ -31,21 +31,32 @@ Graff.prototype.create = function create (label, data) {
 };
 
 Graff.prototype.edge = function edge (from, through, label, data) {
-  const id = this.edges.length;
-  const edg = new Edge({ id, from, through, label, data });
+  const edges = [];
 
-  from._edges.push(id);
+  for (const f in from) {
+    const _from = from[f];
 
-  this.edges = [ ...this.edges, edg ];
+    for (const t in through ) {
+      const _through = through[t];
+      const id = this.edges.length;
+      const edg = new Edge({ id, label, data, from: _from, through:_through });
 
-  if (label) {
-    const labelObj = this.labels.edges;
+      _from._edges.push(id);
 
-    if (!(label in labelObj)) labelObj[label] = [];
-    labelObj[label] = [...labelObj[label], edg._id];
+      this.edges = [ ...this.edges, edg ];
+
+      if (label) {
+        const labelObj = this.labels.edges;
+
+        if (!(label in labelObj)) labelObj[label] = [];
+        labelObj[label] = [...labelObj[label], edg._id];
+      }
+
+      edges.push(edg);
+    }
   }
 
-  return edg;
+  return edges;
 };
 
 Graff.prototype.query = function query (label, properties) {
