@@ -6,9 +6,11 @@ const shouldMinify = ('MIN' in process.env);
 export default {
   entry: 'src/index.js',
   format: 'umd',
+  moduleName: 'Giraffe',
   plugins: [
     babel({
       presets: [ 'es2015-rollup' ],
+      plugins: [ 'transform-object-assign' ],
       babelrc: false
     }),
     shouldMinify ? uglify() : () => {}

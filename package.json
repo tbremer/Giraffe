@@ -1,5 +1,5 @@
 {
-  "name": "Giraffe",
+  "name": "giraffe",
   "version": "1.0.0",
   "description": "Lightweight Graph DB implementation",
   "main": "dist/index.js",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/tbremer/Giraffe#readme",
   "devDependencies": {
+    "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-register": "^6.18.0",
