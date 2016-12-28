@@ -1,32 +1,31 @@
-GRAFF
+Giraffe
 ---
 
 _A simple node/browser graph database_
 
 ## Methods
-
-- `new Graff()`
+- `new Giraffe()`
 	- **`data`**: `Object` _Optional_
 
 - `.create(label, data)`
 	- **`label`**: `String` _Optional_
 	- **`data`**: `Object`
 
-- `.edge(from, to, label, properties)`
-  - **`from`: `Object` _Node where edge originates_
-  - **`to`: `Object` _Node where edge goes_
+- `.remove(nodes)`
+  - **`nodes`**: `Array` _Array of Nodes to be removed from graph_
+    - _this is automatically converted to an Array if a single node is sent in._
+
+- `.edge([ from ], [ to ], label, properties)`
+  - **`from`: `Array` _Array of Nodes where edge originates_
+  - **`to`: `Array` _Array of Nodes where edge goes_
 	- **`label`**: `String` _Optional_
-	- **`properties`**: `Object`
-
-- `.remove(node)`
-	- **`node`**: `Object` _Node to be removed from graph_
-
-- `.removeEdge(edge)`
-	- **`edge`**: `Object` _Edge to be removed from between two nodes_
+	- **`properties`**: `Object` _Optional_
 
 - `.query(label, properties)`
 	- **`label`**: `String` _Optional_
-	- **`properties`**: `Object`
+	- **`properties`**: `Object` _Optional_
+  - _An empty query returns all nodes_
+  - _Queries return only their immediate relationships_
 
 
 ## Internal Structure
