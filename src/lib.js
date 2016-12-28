@@ -77,10 +77,10 @@ export function Node({ id, label, data }) {
 export function Edge({ id, label, from, through, data }) {
   const obj = Object.create(null);
   const edge = Object.defineProperties(obj, {
-    _id: { value: id },
-    from: { value: from._id },
-    through: { value: through._id },
-    label: { value: label }
+    _id: { enumerable, value: id },
+    from: { enumerable, value: from._id },
+    through: { enumerable, value: through._id },
+    label: { enumerable, value: label }
   });
 
   return addDataToObj(edge, data);

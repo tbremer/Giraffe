@@ -1,6 +1,6 @@
 import { Node, Edge, mergePaths } from './lib';
 
-function Graff() {
+export default function Giraffe() {
   this.nodes = [];
   this.edges = [];
   this.labels = {
@@ -9,7 +9,7 @@ function Graff() {
   };
 }
 
-Graff.prototype.create = function create (label, data) {
+Giraffe.prototype.create = function create (label, data) {
   if (label.constructor === Object) {
     data = label;
     label = null;
@@ -30,7 +30,7 @@ Graff.prototype.create = function create (label, data) {
   return node;
 };
 
-Graff.prototype.edge = function edge (from, through, label, data) {
+Giraffe.prototype.edge = function edge (from, through, label, data) {
   if (from.constructor !== Array) from = [ from ];
   if (through.constructor !== Array) through = [ through ];
 
@@ -39,23 +39,17 @@ Graff.prototype.edge = function edge (from, through, label, data) {
   for (const f in from) {
     const _from = from[f];
 
-
     for (const t in through) {
       const _through = through[t];
       const id = this.edges.length;
       const edg = new Edge({ id, label, data, from: _from, through: _through });
+      const labelObj = this.labels.edges;
+
+      if (!(label in labelObj)) labelObj[label] = [];
+      labelObj[label] = [ ...labelObj[label], edg._id ];
 
       _from._edges.push(id);
-
       this.edges = [ ...this.edges, edg ];
-
-      if (label) {
-        const labelObj = this.labels.edges;
-
-        if (!(label in labelObj)) labelObj[label] = [];
-        labelObj[label] = [ ...labelObj[label], edg._id ];
-      }
-
       edges.push(edg);
     }
   }
@@ -63,7 +57,7 @@ Graff.prototype.edge = function edge (from, through, label, data) {
   return edges;
 };
 
-Graff.prototype.query = function query (label, properties) {
+Giraffe.prototype.query = function query (label, properties) {
   if (!label && !properties) label = properties = null;
 
   if (label && label.constructor === Object) {
@@ -74,7 +68,7 @@ Graff.prototype.query = function query (label, properties) {
   return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
 };
 
-Graff.prototype.remove = function remove (nodes) {
+Giraffe.prototype.remove = function remove (nodes) {
   if (nodes.constructor !== Array) nodes = [ nodes ];
 
   for (const n in nodes) {
