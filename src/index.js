@@ -121,5 +121,3 @@ Graff.prototype.remove = function remove (nodes) {
     this.nodes[node._id] = undefined;
   }
 };
-
-window.Graff = Graff; //eslint-disable-line
