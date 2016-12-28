@@ -30,44 +30,6 @@ Giraffe.prototype.create = function create (label, data) {
   return node;
 };
 
-Giraffe.prototype.edge = function edge (from, through, label, data) {
-  if (from.constructor !== Array) from = [ from ];
-  if (through.constructor !== Array) through = [ through ];
-
-  const edges = [];
-
-  for (const f in from) {
-    const _from = from[f];
-
-    for (const t in through) {
-      const _through = through[t];
-      const id = this.edges.length;
-      const edg = new Edge({ id, label, data, from: _from, through: _through });
-      const labelObj = this.labels.edges;
-
-      if (!(label in labelObj)) labelObj[label] = [];
-      labelObj[label] = [ ...labelObj[label], edg._id ];
-
-      _from._edges.push(id);
-      this.edges = [ ...this.edges, edg ];
-      edges.push(edg);
-    }
-  }
-
-  return edges;
-};
-
-Giraffe.prototype.query = function query (label, properties) {
-  if (!label && !properties) label = properties = null;
-
-  if (label && label.constructor === Object) {
-    properties = label;
-    label = null;
-  }
-
-  return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
-};
-
 Giraffe.prototype.remove = function remove (nodes) {
   if (nodes.constructor !== Array) nodes = [ nodes ];
 
@@ -114,4 +76,42 @@ Giraffe.prototype.remove = function remove (nodes) {
      */
     this.nodes[node._id] = undefined;
   }
+};
+
+Giraffe.prototype.edge = function edge (from, through, label, data) {
+  if (from.constructor !== Array) from = [ from ];
+  if (through.constructor !== Array) through = [ through ];
+
+  const edges = [];
+
+  for (const f in from) {
+    const _from = from[f];
+
+    for (const t in through) {
+      const _through = through[t];
+      const id = this.edges.length;
+      const edg = new Edge({ id, label, data, from: _from, through: _through });
+      const labelObj = this.labels.edges;
+
+      if (!(label in labelObj)) labelObj[label] = [];
+      labelObj[label] = [ ...labelObj[label], edg._id ];
+
+      _from._edges.push(id);
+      this.edges = [ ...this.edges, edg ];
+      edges.push(edg);
+    }
+  }
+
+  return edges;
+};
+
+Giraffe.prototype.query = function query (label, properties) {
+  if (!label && !properties) label = properties = null;
+
+  if (label && label.constructor === Object) {
+    properties = label;
+    label = null;
+  }
+
+  return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
 };
