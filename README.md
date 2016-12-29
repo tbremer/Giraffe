@@ -2,10 +2,10 @@ Giraffe
 ---
 _A simple node & browser graph database_
 
-[![Travis CI](https://img.shields.io/travis/tbremer/giraffe.svg?style=flat-square)](https://travis-ci.org/tbremer/giraffe)
+[![Travis CI](https://img.shields.io/travis/tbremer/Giraffe.svg?style=flat-square)](https://travis-ci.org/tbremer/Giraffe)
 [![Version](https://img.shields.io/npm/v/giraffe.svg?style=flat-square)](https://www.npmjs.com/package/giraffe)
 [![NPM Downloads](https://img.shields.io/npm/dm/giraffe.svg?style=flat-square)](https://www.npmjs.com/package/giraffe)
-[![LICENSE](https://img.shields.io/npm/l/Giraffe.svg?style=flat-square)](https://github.com/tbremer/Giraffe/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/npm/l/giraffe.svg?style=flat-square)](https://github.com/tbremer/Giraffe/blob/master/LICENSE)
 
 ## Methods
 - `new Giraffe()`
