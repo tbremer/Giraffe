@@ -3,7 +3,21 @@ const enumerable = true;
 function nodeEquality(searchObj, node) {
   if (!searchObj) return true;
 
+  const nodeKeys = [];
+
+  for (const key in node) {
+    nodeKeys.push(key);
+  }
+
   for (const key in searchObj) {
+    if (key === '_edges') {
+      if (searchObj[key].constructor !== Array) searchObj[key] = [ searchObj[key] ];
+      for (const edgeId in searchObj[key]) {
+        const edgeName = searchObj[key][edgeId];
+
+        if (nodeKeys.indexOf(edgeName) > -1) return true;
+      }
+    }
     if (!(key in node)) return false;
     if (searchObj[key] !== node[key]) return false;
   }
@@ -35,16 +49,14 @@ export function mergePaths(label, properties, { nodes, edges/*, labels */ }) {
 
   for (const idx in nodes) {
     const node = nodes[idx];
-
     if (!node) continue;
-
-    if (label && label !== node.label) continue;
-    if (!nodeEquality(properties, node)) continue;
 
     const obj = createObjFromNode(node);
 
-    for (const idx in node._edges) {
-      const edgeId = node._edges[idx];
+    if (label && label !== obj.label) continue;
+
+    for (const idx in obj._edges) {
+      const edgeId = obj._edges[idx];
       const edge = edges[edgeId];
 
       if (!edge) continue;
@@ -54,8 +66,10 @@ export function mergePaths(label, properties, { nodes, edges/*, labels */ }) {
 
       if (!(label in obj)) obj[label] = [];
 
-      obj[label].push(throughNode);
+      obj[label].push(createObjFromNode(throughNode));
     }
+
+    if (!nodeEquality(properties, obj)) continue;
 
     objects.push(obj);
   }

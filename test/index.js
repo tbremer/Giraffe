@@ -127,4 +127,43 @@ describe('giraffe', () => {
     });
     expect(results[0]).toIncludeKey('CHASES');
   });
+
+  it('can query based on edges', () => {
+    const cat = db.create(label, { name: 'Cat' });
+    const dog = db.create(label, { name: 'Dog' });
+    db.create(label, { name: 'CatDog' });
+
+    db.edge(cat, dog, relationship);
+    db.edge(dog, cat, relationship);
+
+    const results = db.query({ _edges: [ relationship ] });
+
+    expect(results.length).toEqual(2);
+  });
+
+  it('can query based on edges with a single value', () => {
+    const cat = db.create(label, { name: 'Cat' });
+    const dog = db.create(label, { name: 'Dog' });
+    db.create(label, { name: 'CatDog' });
+
+    db.edge(cat, dog, relationship);
+    db.edge(dog, cat, relationship);
+
+    const results = db.query({ _edges: relationship });
+
+    expect(results.length).toEqual(2);
+  });
+
+  it('edge query returns no results when no edges found', () => {
+    const cat = db.create(label, { name: 'Cat' });
+    const dog = db.create(label, { name: 'Dog' });
+    db.create(label, { name: 'CatDog' });
+
+    db.edge(cat, dog, relationship);
+    db.edge(dog, cat, relationship);
+
+    const results = db.query({ _edges: [ 'ACTED_IN' ] });
+
+    expect(results.length).toEqual(0);
+  });
 });
