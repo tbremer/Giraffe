@@ -4,6 +4,7 @@
   "description": "Lightweight Graph DB implementation",
   "main": "dist/index.js",
   "scripts": {
+    "prepublish": "rollup -c && MIN=true rollup -c",
     "build": "rollup -c",
     "pretest": "eslint src/",
     "test": "mocha --compilers js:babel-register",

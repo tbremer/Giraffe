@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel';
 import uglify from 'rollup-plugin-uglify';
+import clean from './lib/rollup-plugin-clean';
 
 const shouldMinify = ('MIN' in process.env);
 
@@ -13,7 +14,7 @@ export default {
       plugins: [ 'transform-object-assign' ],
       babelrc: false
     }),
-    shouldMinify ? uglify() : () => {}
+    shouldMinify ? uglify() : clean()
   ],
   dest: `dist/bundle${shouldMinify ? '.min' : ''}.js`
 };
