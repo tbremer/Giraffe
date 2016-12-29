@@ -1,4 +1,6 @@
-import { Node, Edge, mergePaths } from './lib';
+import Node from './Node';
+import Edge from './Edge';
+import { /*Node, Edge,*/ mergePaths } from './lib';
 
 export default function Giraffe() {
   this.nodes = [];
@@ -24,7 +26,7 @@ Giraffe.prototype.create = function create (label, data) {
     const labelObj = this.labels.nodes;
 
     if (!(label in labelObj)) labelObj[label] = [];
-    labelObj[label] = [ ...labelObj[label], node._id ];
+    labelObj[label] = [ ...labelObj[label], node.identity ];
   }
 
   return node;
@@ -94,9 +96,9 @@ Giraffe.prototype.edge = function edge (from, through, label, data) {
       const labelObj = this.labels.edges;
 
       if (!(label in labelObj)) labelObj[label] = [];
-      labelObj[label] = [ ...labelObj[label], edg._id ];
+      labelObj[label] = [ ...labelObj[label], edg.identity ];
 
-      _from._edges.push(id);
+      _from.edges.push(id);
       this.edges = [ ...this.edges, edg ];
       edges.push(edg);
     }
