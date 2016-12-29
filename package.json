@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/tbremer/Giraffe#readme",
   "pre-commit": [
-      "test"
+    "test"
   ],
   "devDependencies": {
     "babel-plugin-transform-object-assign": "^6.8.0",
@@ -39,6 +39,7 @@
     "pre-commit": "^1.2.2",
     "rollup": "^0.38.0",
     "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^2.5.0"
   }
