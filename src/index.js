@@ -1,6 +1,7 @@
 import Node from './Node';
 import Edge from './Edge';
-import { /*Node, Edge,*/ mergePaths } from './lib';
+import Obj from './Obj';
+import { checkProperties } from './lib';
 
 export default function Giraffe() {
   this.nodes = [];
@@ -115,5 +116,28 @@ Giraffe.prototype.query = function query (label, properties) {
     label = null;
   }
 
-  return mergePaths(label, properties, { nodes: this.nodes, edges: this.edges, labels: this.labels });
+  // console.log('label:', label);
+  // console.log('properties:', properties);
+  // console.log('this.nodes:', this.nodes);
+  // console.log('this.labels:', this.labels);
+  // console.log('this.edges:', this.edges);
+
+  const results = [];
+
+  for (const idx in this.nodes) {
+    const node = this.nodes[idx];
+    if (!node) continue;
+    if (label && node.labels.indexOf(label) === -1) continue;
+    if (properties && !checkProperties(node, properties)) continue;
+
+    /*
+      * EDGE CHECKING?
+     */
+
+    // console.log('node:', node);
+
+    results.push(Object.assign(new Obj(), node));
+  }
+
+  return results;
 };

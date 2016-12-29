@@ -73,6 +73,88 @@ describe('Giraffe', () => {
     expect(edge).toInclude({ properties: data });
   });
 
+  describe('query', () => {
+    it('returns all built nodes if no properties passed in');
+    it('returns all built nodes of a label if only a label passed in');
+
+    it('nodes returned in query', () => {
+      db.create(label, { name: 'Cat' });
+      db.create(label, { name: 'Dog' });
+      db.create(label, { name: 'CatDog' });
+
+      const results = db.query(label, { name: 'CatDog' });
+      expect(results.length).toEqual(1);
+      expect(results[0]).toInclude({
+        identity: 2,
+        labels: [ label ],
+        properties: { name: 'CatDog' }
+      });
+    });
+
+    xit('edges returned in search', () => {
+      db.create(label, { name: 'Cat' });
+      db.create(label, { name: 'Dog' });
+      db.create(label, { name: 'CatDog' });
+
+      db.edge(
+        db.query(label, { name: 'Cat' }),
+        db.query(label, { name: 'Dog' }),
+        relationship
+      );
+
+      expect(db.nodes.length).toEqual(3);
+      expect(db.edges.length).toEqual(1);
+
+      const results = db.query(label, { name: 'Cat' });
+
+      expect(results.length).toEqual(1);
+      expect(results[0]).toInclude({
+        name: 'Cat',
+        _edges: [ 0 ]
+      });
+      expect(results[0]).toIncludeKey('CHASES');
+    });
+
+    xit('can query based on edges', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
+      db.create(label, { name: 'CatDog' });
+
+      db.edge(cat, dog, relationship);
+      db.edge(dog, cat, relationship);
+
+      const results = db.query({ _edges: [ relationship ] });
+
+      expect(results.length).toEqual(2);
+    });
+
+    xit('can query based on edges with a single value', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
+      db.create(label, { name: 'CatDog' });
+
+      db.edge(cat, dog, relationship);
+      db.edge(dog, cat, relationship);
+
+      const results = db.query({ _edges: relationship });
+
+      expect(results.length).toEqual(2);
+    });
+
+    xit('edge query returns no results when no edges found', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
+      db.create(label, { name: 'CatDog' });
+
+      db.edge(cat, dog, relationship);
+      db.edge(dog, cat, relationship);
+
+      const results = db.query({ _edges: [ 'ACTED_IN' ] });
+
+      expect(results.length).toEqual(0);
+    });
+  });
+
   /**
    * OLD TESTS
    */
@@ -103,81 +185,5 @@ describe('Giraffe', () => {
     expect(db.edges.length).toEqual(1);
     expect(db.nodes[0]).toEqual(undefined);
     expect(db.edges[0]).toEqual(undefined);
-  });
-
-  xit('nodes returned in search', () => {
-    db.create(label, { name: 'Cat' });
-    db.create(label, { name: 'Dog' });
-    db.create(label, { name: 'CatDog' });
-
-    expect(db.nodes.length).toEqual(3);
-    expect(db.edges.length).toEqual(0);
-
-    const results = db.query(label, { name: 'CatDog' });
-    expect(results.length).toEqual(1);
-    expect(results[0]).toInclude({ name: 'CatDog' });
-  });
-
-  xit('edges returned in search', () => {
-    db.create(label, { name: 'Cat' });
-    db.create(label, { name: 'Dog' });
-    db.create(label, { name: 'CatDog' });
-
-    db.edge(
-      db.query(label, { name: 'Cat' }),
-      db.query(label, { name: 'Dog' }),
-      relationship
-    );
-
-    expect(db.nodes.length).toEqual(3);
-    expect(db.edges.length).toEqual(1);
-
-    const results = db.query(label, { name: 'Cat' });
-
-    expect(results.length).toEqual(1);
-    expect(results[0]).toInclude({
-      name: 'Cat',
-      _edges: [ 0 ]
-    });
-    expect(results[0]).toIncludeKey('CHASES');
-  });
-
-  xit('can query based on edges', () => {
-    const cat = db.create(label, { name: 'Cat' });
-    const dog = db.create(label, { name: 'Dog' });
-    db.create(label, { name: 'CatDog' });
-
-    db.edge(cat, dog, relationship);
-    db.edge(dog, cat, relationship);
-
-    const results = db.query({ _edges: [ relationship ] });
-
-    expect(results.length).toEqual(2);
-  });
-
-  xit('can query based on edges with a single value', () => {
-    const cat = db.create(label, { name: 'Cat' });
-    const dog = db.create(label, { name: 'Dog' });
-    db.create(label, { name: 'CatDog' });
-
-    db.edge(cat, dog, relationship);
-    db.edge(dog, cat, relationship);
-
-    const results = db.query({ _edges: relationship });
-
-    expect(results.length).toEqual(2);
-  });
-
-  xit('edge query returns no results when no edges found', () => {
-    const cat = db.create(label, { name: 'Cat' });
-    const dog = db.create(label, { name: 'Dog' });
-    db.create(label, { name: 'CatDog' });
-
-    db.edge(cat, dog, relationship);
-    db.edge(dog, cat, relationship);
-
-    const results = db.query({ _edges: [ 'ACTED_IN' ] });
-
-    expect(results.length).toEqual(0);
   });
 });

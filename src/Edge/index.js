@@ -1,11 +1,9 @@
+import Obj from '../Obj';
+
 const validConstructors = [ String, Number ];
 
 function testConstructor(type) {
   return validConstructors.indexOf(type.constructor) > -1;
-}
-
-function Obj(type = null) {
-  return Object.create(type);
 }
 
 export default function Edge({ from, through, id, data, label }) {

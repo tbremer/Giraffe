@@ -1,101 +1,112 @@
-const enumerable = true;
+export function checkProperties(node, properties) {
+  const { properties: props } = node;
 
-function nodeEquality(searchObj, node) {
-  if (!searchObj) return true;
-
-  const nodeKeys = [];
-
-  for (const key in node) {
-    nodeKeys.push(key);
-  }
-
-  for (const key in searchObj) {
-    if (key === '_edges') {
-      if (searchObj[key].constructor !== Array) searchObj[key] = [ searchObj[key] ];
-      for (const edgeId in searchObj[key]) {
-        const edgeName = searchObj[key][edgeId];
-
-        if (nodeKeys.indexOf(edgeName) > -1) return true;
-      }
-    }
-    if (!(key in node)) return false;
-    if (searchObj[key] !== node[key]) return false;
+  for (const key in properties) {
+    if (!(key in props)) return false;
+    if (props[key] !== properties[key]) return false;
   }
 
   return true;
 }
 
-function createObjFromNode(node) {
-  const _node = Object.assign(
-    Object.create(null),
-    node
-  );
+// const enumerable = true;
 
-  return _node;
-}
+// function nodeEquality(searchObj, node) {
+//   if (!searchObj) return true;
 
-function addDataToObj(obj, data) {
-  if (!data) return obj;
+//   const nodeKeys = [];
 
-  for (const key in data) {
-    Object.defineProperty(obj, key, { enumerable, value: data[key] });
-  }
+//   for (const key in node) {
+//     nodeKeys.push(key);
+//   }
 
-  return obj;
-}
+//   for (const key in searchObj) {
+//     if (key === '_edges') {
+//if (searchObj[key].constructor !== Array) searchObj[key] = [ searchObj[key] ];
+//       for (const edgeId in searchObj[key]) {
+//         const edgeName = searchObj[key][edgeId];
 
-export function mergePaths(label, properties, { nodes, edges/*, labels */ }) {
-  const objects = [];
+//         if (nodeKeys.indexOf(edgeName) > -1) return true;
+//       }
+//     }
+//     if (!(key in node)) return false;
+//     if (searchObj[key] !== node[key]) return false;
+//   }
 
-  for (const idx in nodes) {
-    const node = nodes[idx];
-    if (!node) continue;
+//   return true;
+// }
 
-    const obj = createObjFromNode(node);
+// function createObjFromNode(node) {
+//   const _node = Object.assign(
+//     Object.create(null),
+//     node
+//   );
 
-    if (label && label !== obj.label) continue;
+//   return _node;
+// }
 
-    for (const idx in obj._edges) {
-      const edgeId = obj._edges[idx];
-      const edge = edges[edgeId];
+// function addDataToObj(obj, data) {
+//   if (!data) return obj;
 
-      if (!edge) continue;
+//   for (const key in data) {
+//     Object.defineProperty(obj, key, { enumerable, value: data[key] });
+//   }
 
-      const { label } = edge;
-      const throughNode = nodes[edge.through];
+//   return obj;
+// }
 
-      if (!(label in obj)) obj[label] = [];
+//export function mergePaths(label, properties, { nodes, edges/*, labels */ }) {
+//   const objects = [];
 
-      obj[label].push(createObjFromNode(throughNode));
-    }
+//   for (const idx in nodes) {
+//     const node = nodes[idx];
+//     if (!node) continue;
 
-    if (!nodeEquality(properties, obj)) continue;
+//     const obj = createObjFromNode(node);
 
-    objects.push(obj);
-  }
+//     if (label && label !== obj.label) continue;
 
-  return objects;
-}
+//     for (const idx in obj._edges) {
+//       const edgeId = obj._edges[idx];
+//       const edge = edges[edgeId];
 
-export function Node({ id, label, data }) {
-  const obj = Object.create(null);
-  const node = Object.defineProperties(obj, {
-    _id: { enumerable, value: id },
-    _edges: { enumerable, value: [] },
-    label: { enumerable, value: label }
-  });
+//       if (!edge) continue;
 
-  return addDataToObj(node, data);
-}
+//       const { label } = edge;
+//       const throughNode = nodes[edge.through];
 
-export function Edge({ id, label, from, through, data }) {
-  const obj = Object.create(null);
-  const edge = Object.defineProperties(obj, {
-    _id: { enumerable, value: id },
-    from: { enumerable, value: from._id },
-    through: { enumerable, value: through._id },
-    label: { enumerable, value: label }
-  });
+//       if (!(label in obj)) obj[label] = [];
 
-  return addDataToObj(edge, data);
-}
+//       obj[label].push(createObjFromNode(throughNode));
+//     }
+
+//     if (!nodeEquality(properties, obj)) continue;
+
+//     objects.push(obj);
+//   }
+
+//   return objects;
+// }
+
+// export function Node({ id, label, data }) {
+//   const obj = Object.create(null);
+//   const node = Object.defineProperties(obj, {
+//     _id: { enumerable, value: id },
+//     _edges: { enumerable, value: [] },
+//     label: { enumerable, value: label }
+//   });
+
+//   return addDataToObj(node, data);
+// }
+
+// export function Edge({ id, label, from, through, data }) {
+//   const obj = Object.create(null);
+//   const edge = Object.defineProperties(obj, {
+//     _id: { enumerable, value: id },
+//     from: { enumerable, value: from._id },
+//     through: { enumerable, value: through._id },
+//     label: { enumerable, value: label }
+//   });
+
+//   return addDataToObj(edge, data);
+// }

@@ -1,6 +1,4 @@
-function Obj(type = null) {
-  return Object.create(type);
-}
+import Obj from '../Obj';
 
 export default function Node({ id, label, data }) {
   const node = new Obj();
