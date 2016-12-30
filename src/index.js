@@ -128,12 +128,41 @@ Giraffe.prototype.query = function query (label, properties) {
     const node = this.nodes[idx];
     if (!node) continue;
     if (label && node.labels.indexOf(label) === -1) continue;
-    if (properties && !checkProperties(node, properties)) continue;
 
-    /*
-      * EDGE CHECKING?
+    const nodeContainsValidProps = checkProperties(node, properties);
+    const edgeCheck = ('edges' in properties);
+
+    if (properties && !nodeContainsValidProps && !edgeCheck) continue;
+
+    /**
+     * Edge checking
+     * define boolean as false (assume node does not have the edge)
+     * we loop through all edges, checking `this.labels.edges` for the names,
+     * then checking the corresponding ids.
+     * if and edge is not found we continue checking nodes.
      */
+    if (edgeCheck) {
+      let nodeContainsEdge = false;
+      for (const idx in properties.edges) {
+        const edgeName = properties.edges[idx];
 
+        if (!(edgeName in this.labels.edges)) continue; // edge is not known
+        if (this.labels.edges[edgeName].indexOf(node.identity) > -1) { // edge exists and is found
+          nodeContainsEdge = true;
+          continue;
+        }
+      }
+
+      if (!nodeContainsEdge) continue; // Node does not have the edge and we move on. through our parent loop.
+    }
+
+    /**
+     * Build our node object without a prototype (now Hash Objects);
+     * loop through all the edges and create a circular reference to the node
+     * bind the node and it's relationship to the same return
+     * This works in a single degree of separation so a node can have an edge
+     * to itself without stack-overflowing.
+     */
     const returnObj = Object.assign(new Obj(), node);
 
     for (const edgeIdx in returnObj.edges) {

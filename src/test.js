@@ -117,7 +117,7 @@ describe('Giraffe', () => {
       });
     });
 
-    xit('can query based on edges', () => {
+    it('can query based on edges', () => {
       const cat = db.create(label, { name: 'Cat' });
       const dog = db.create(label, { name: 'Dog' });
       db.create(label, { name: 'CatDog' });
@@ -125,7 +125,7 @@ describe('Giraffe', () => {
       db.edge(cat, dog, relationship);
       db.edge(dog, cat, relationship);
 
-      const results = db.query({ _edges: [ relationship ] });
+      const results = db.query({ edges: [ relationship ] });
 
       expect(results.length).toEqual(2);
     });
