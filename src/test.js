@@ -1,11 +1,10 @@
 import expect from 'expect';
 import Giraffe from './';
 
+const label = 'Animal';
 const relationship = 'CHASES';
 
 describe('Giraffe', () => {
-  const label = 'Animal';
-  // const relationship = 'CHASES';
   let db;
 
   beforeEach(() => { db = new Giraffe(); }); //eslint-disable-line
@@ -91,9 +90,9 @@ describe('Giraffe', () => {
       });
     });
 
-    xit('edges returned in search', () => {
-      db.create(label, { name: 'Cat' });
-      db.create(label, { name: 'Dog' });
+    it('edges returned in search', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
       db.create(label, { name: 'CatDog' });
 
       db.edge(
@@ -106,13 +105,16 @@ describe('Giraffe', () => {
       expect(db.edges.length).toEqual(1);
 
       const results = db.query(label, { name: 'Cat' });
+      const [ node ] = results;
+      const [ edge ] = node.edges;
 
       expect(results.length).toEqual(1);
-      expect(results[0]).toInclude({
-        name: 'Cat',
-        _edges: [ 0 ]
+      expect(edge).toInclude({
+        label: 'CHASES',
+        identity: 0,
+        from: cat,
+        through: dog
       });
-      expect(results[0]).toIncludeKey('CHASES');
     });
 
     xit('can query based on edges', () => {

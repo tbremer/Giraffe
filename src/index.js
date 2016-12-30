@@ -134,9 +134,20 @@ Giraffe.prototype.query = function query (label, properties) {
       * EDGE CHECKING?
      */
 
-    // console.log('node:', node);
+    const returnObj = Object.assign(new Obj(), node);
 
-    results.push(Object.assign(new Obj(), node));
+    for (const edgeIdx in returnObj.edges) {
+      const edgeId = returnObj.edges[edgeIdx];
+      const edge = Object.assign(new Obj(), this.edges[edgeId]);
+      const throughNode = this.nodes[edge.through];
+
+      edge.through = Object.assign(new Obj(), throughNode);
+      edge.from = returnObj;
+
+      returnObj.edges[edgeIdx] = edge;
+    }
+
+    results.push(returnObj);
   }
 
   return results;
