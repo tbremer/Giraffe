@@ -38,13 +38,13 @@ Giraffe.prototype.remove = function remove (nodes) {
 
   for (const n in nodes) {
     const node = nodes[n];
-    const { _id: id } = node;
+    const { identity } = node;
 
     /**
      * remove all of this node's edges
      */
-    for (const e in node._edges) {
-      const edge = node._edges[e];
+    for (const e in node.edges) {
+      const edge = node.edges[e];
 
       this.edges[edge] = undefined;
     }
@@ -55,18 +55,18 @@ Giraffe.prototype.remove = function remove (nodes) {
     for (const e in this.edges) {
       const edge = this.edges[e];
 
-      if (!edge || edge.through !== id) continue;
+      if (!edge || edge.through !== identity) continue;
 
       const node = this.nodes[edge.from];
       if (!node) continue;
 
-      const idx = node._edges.indexOf(edge._id);
+      const idx = node.edges.indexOf(edge.identity);
       if (idx === -1) continue;
 
       /**
        * splice edge out of node's array
        */
-      node._edges.splice(idx, 1);
+      node.edges.splice(idx, 1);
 
       /**
        * remove
@@ -77,7 +77,7 @@ Giraffe.prototype.remove = function remove (nodes) {
     /**
      * finally, remove node.
      */
-    this.nodes[node._id] = undefined;
+    this.nodes[identity] = undefined;
   }
 };
 
@@ -116,12 +116,6 @@ Giraffe.prototype.query = function query (label, properties) {
     label = null;
   }
 
-  // console.log('label:', label);
-  // console.log('properties:', properties);
-  // console.log('this.nodes:', this.nodes);
-  // console.log('this.labels:', this.labels);
-  // console.log('this.edges:', this.edges);
-
   const results = [];
 
   for (const idx in this.nodes) {
@@ -130,9 +124,7 @@ Giraffe.prototype.query = function query (label, properties) {
     if (label && node.labels.indexOf(label) === -1) continue;
 
     const nodeContainsValidProps = checkProperties(node, properties);
-    const edgeCheck = ('edges' in properties);
-
-    if (properties && !nodeContainsValidProps && !edgeCheck) continue;
+    const edgeCheck = (properties && 'edges' in properties);
 
     /**
      * Edge checking
@@ -155,6 +147,8 @@ Giraffe.prototype.query = function query (label, properties) {
 
       if (!nodeContainsEdge) continue; // Node does not have the edge and we move on. through our parent loop.
     }
+
+    if (properties && !nodeContainsValidProps) continue;
 
     /**
      * Build our node object without a prototype (now Hash Objects);

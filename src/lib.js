@@ -2,6 +2,7 @@ export function checkProperties(node, properties) {
   const { properties: props } = node;
 
   for (const key in properties) {
+    if (key === 'edges') continue;
     if (!(key in props)) return false;
     if (props[key] !== properties[key]) return false;
   }
