@@ -182,6 +182,20 @@ describe('Giraffe', () => {
 
       expect(results.length).toEqual(1);
     });
+
+    it('returns properly when testing multiple edges', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
+
+      db.edge(cat, dog, relationship);
+      db.edge(cat, dog, 'PLAYS');
+      db.edge(dog, cat, relationship);
+
+      const results = db.query({ edges: [ relationship, 'PLAYS' ] });
+
+      expect(results.length).toEqual(1);
+      expect(results[0].properties).toInclude({ name: 'Cat' });
+    });
   });
 
   describe('remove', () => {
