@@ -128,36 +128,29 @@ Giraffe.prototype.query = function query (label, properties) {
 
     /**
      * Edge checking
-     * define boolean as false (assume node does not have the edge)
-     * we loop through all edges, checking `this.labels.edges` for the names,
-     * then checking the corresponding ids.
-     * if an edge is not found we continue checking nodes.
-     *
-     * this solution will need to be tweaked for methods like:
-     * {
-     *   edges: [ 'one', 'two' ]
-     * }
-     * because we confirm a node's truthyness based on any one passing test.
+     * get count of edges being checked
+     * loop through all edges, checking `this.labels.edges` for the edge ids,
+     * then checking the corresponding edge from property.
+     * if edge count is less than edge's being checked move on.
      */
     if (edgeCheck) {
       const edgeTotal = properties.edges.length;
       let count = 0;
+
       for (const idx in properties.edges) {
         const edgeName = properties.edges[idx];
         const internalNodeIdsFromEdge = [];
 
         if (!(edgeName in this.labels.edges)) continue; // edge is not known
-        /**
-         * Get all the edges based on the IDs from the label.
-         * Get all the nodes from the edges.from entry.
-         */
+
         for (const idFromLabel in this.labels.edges[edgeName]) {
           const id = this.labels.edges[edgeName][idFromLabel];
           const edge = this.edges[id];
-          //eslint-disable-next-line
+
           if (!edge) continue; //edges can be undefined from the `remove` method.
           internalNodeIdsFromEdge.push(edge.from);
         }
+
         if (internalNodeIdsFromEdge.indexOf(node.identity) > -1) count++; // edge exists and is found
       }
 
