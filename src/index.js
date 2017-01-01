@@ -41,12 +41,37 @@ Giraffe.prototype.remove = function remove (nodes) {
     const { identity } = node;
 
     /**
-     * remove all of this node's edges
+     * Removes all of this node's edges
+     * Removes all label -> edge references.
      */
     for (const e in node.edges) {
-      const edge = node.edges[e];
+      const edgeId = node.edges[e];
+      const edge = this.edges[edgeId];
+      const { label, identity } = edge;
 
-      this.edges[edge] = undefined;
+      if (label in this.labels.edges) {
+        const idx = this.labels.edges[label].indexOf(identity);
+        if (idx !== -1) this.labels.edges[label].splice(idx, 1);
+      }
+
+      /**
+       * Remove the edge
+       */
+      this.edges[edgeId] = undefined;
+    }
+
+    /**
+     * Remove this node from the labels properties.
+     */
+    for (const idx in node.labels) {
+      const label = node.labels[idx];
+      if (!(label in this.labels.nodes)) continue; // label does not exist
+
+      const nodeIdx = this.labels.nodes[label].indexOf(identity);
+
+      if (nodeIdx === -1) continue; // node index does not exist in label
+
+      this.labels.nodes[label].splice(nodeIdx, 1);
     }
 
     /**
@@ -54,7 +79,6 @@ Giraffe.prototype.remove = function remove (nodes) {
      */
     for (const e in this.edges) {
       const edge = this.edges[e];
-
       if (!edge || edge.through !== identity) continue;
 
       const node = this.nodes[edge.from];

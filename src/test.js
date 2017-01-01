@@ -178,8 +178,6 @@ describe('Giraffe', () => {
 
       const results = db.query({ name: 'Cat', edges: [ relationship ] });
 
-      // console.log(results);
-
       expect(results.length).toEqual(1);
     });
 
@@ -225,6 +223,31 @@ describe('Giraffe', () => {
       expect(db.edges.length).toEqual(1);
       expect(db.nodes[0]).toEqual(undefined);
       expect(db.edges[0]).toEqual(undefined);
+    });
+
+    it('removes reference to nodes in labels.nodes', () => {
+      db.create(label, { name: 'Cat' });
+      const node = db.create(label, { name: 'Dog' });
+
+      db.remove(node);
+
+      expect(db.nodes.length).toEqual(2);
+      expect(db.nodes[1]).toEqual(undefined);
+      expect(db.labels.nodes[label].length).toEqual(1);
+      expect(db.labels.nodes[label][0]).toEqual(0);
+    });
+
+    it('removes reference to nodes in labels.edges', () => {
+      const cat = db.create(label, { name: 'Cat' });
+      const dog = db.create(label, { name: 'Dog' });
+
+      db.edge(cat, dog, relationship);
+      db.remove(cat);
+
+      expect(db.nodes.length).toEqual(2);
+      expect(db.nodes[0]).toEqual(undefined);
+      expect(db.labels.edges[relationship].length).toEqual(0);
+      expect(db.labels.edges[relationship][0]).toEqual(undefined);
     });
   });
 });
