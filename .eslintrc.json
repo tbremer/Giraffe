@@ -1,8 +1,9 @@
 {
-	"extends": "tbremer",
-	"rules": {
-		"max-params": [2, 4],
-		"object-property-newline": [ 2, { "allowMultiplePropertiesPerLine": true } ],
-		"newline-after-var": 0
-	}
+  "extends": "tbremer",
+  "rules": {
+    "max-params": [2, 4],
+    "object-property-newline": [ 2, { "allowMultiplePropertiesPerLine": true } ],
+    "newline-after-var": 0,
+    "max-depth": [2, 7]
+  }
 }
