@@ -1,4 +1,7 @@
-*
-!dist/
-!README.md
-!package.json
+lib/
+yarn.lock
+rollup.config.js
+.travis.yml
+.eslintrc.json
+.editorconfig
+.babelrc
