@@ -9,13 +9,9 @@ function testConstructor(type) {
 export default function Edge({ from, through, id, data, label }) {
   if (!label || !testConstructor(label)) throw new Error('All Edges need a single Label');
 
-  const edge = new Obj();
-
-  edge.identity = id;
-  edge.from = from.identity;
-  edge.through = through.identity;
-  edge.label = label;
-  edge.properties = Object.assign(new Obj(), data);
-
-  return edge;
+  this.identity = id;
+  this.from = from.identity;
+  this.through = through.identity;
+  this.label = label;
+  this.properties = Object.assign(new Obj(), data);
 }

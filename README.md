@@ -9,7 +9,7 @@ _A simple node & browser graph database_
 
 ## Methods
 - `new Giraffe()`
-  - **`data`**: `Object` _Optional_
+  - Create the DB instace
 
 - `.create(label, data)`
   - **`label`**: `String` _Optional_
@@ -17,11 +17,11 @@ _A simple node & browser graph database_
 
 - `.remove(nodes)`
   - **`nodes`**: `Array` _Array of Nodes to be removed from graph_
-    - _this is automatically converted to an Array if a single node is sent in._
+    - _this is automatically converted to an Array if a single node is passed in._
 
 - `.edge([ from ], [ to ], label, properties)`
-  - **`from`: `Array` _Array of Nodes where edge originates_
-  - **`to`: `Array` _Array of Nodes where edge goes_
+  - **`from`** `Array` _Array of Nodes where edge originates_
+  - **`to`**: `Array` _Array of Nodes where edge goes_
   - **`label`**: `String` _Optional_
   - **`properties`**: `Object` _Optional_
 
@@ -32,8 +32,9 @@ _A simple node & browser graph database_
   - _An empty query returns all nodes_
   - _Queries return only their immediate relationships_
 
-
 ## Internal Structure
+
+### Database
 ```javascript
 {
   /**
@@ -50,7 +51,13 @@ _A simple node & browser graph database_
    * Dynamic key:value store for tracking known node and edge labels
    */
   labels: {
-    [label]: [/* Array of ids */]
+    nodes: {
+      [label]: [/* Array of Node ids */]
+    },
+    edges: {
+      [label]: [/* Array of Edge ids */]
+    }
+
   }
 }
 ```
@@ -58,18 +65,33 @@ _A simple node & browser graph database_
 ### Node
 ```javascript
 {
-  _id: Number,
-  ...properties,
+  identity: Number,
+  properties: Object,
+  labels: Array,
+  edges: Array,
 }
 ```
+
+#### Node Methods
+`update(newData)`: Merge's Node's properties with `newData` object
 
 
 ### Edge
-```Javascript
+```javascript
 {
-  _id: Number,
-  _from: Node,
-  _through: Node,
-  ...properties
+  identity: Number,
+  from: <Node Identity /> || <Node />,
+  through: <Node Identity /> || <Node />,
+  label: String,
+  properties: Object
 }
 ```
+
+#### Edge information
+- `properties` is the object passed into the `db.edge` method.
+- `from` and `through` are stored in the DB as `from.identity` and `through.identity`.
+- When `db.query` returns `from` and `through` are references to the `Node`'s they represent
+
+## Coming Features
+1. Allow dataset to be passed in with initial DB Creation (`new Giraffe({ data })`)
+1. Provide callback for when any action occurs (`new Giraffe(() => {})`)
