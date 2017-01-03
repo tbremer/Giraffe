@@ -72,10 +72,6 @@ _A simple node & browser graph database_
 }
 ```
 
-#### Node Methods
-`update(newData)`: Merge's Node's properties with `newData` object
-
-
 ### Edge
 ```javascript
 {
