@@ -32,6 +32,12 @@ _A simple node & browser graph database_
   - _An empty query returns all nodes_
   - _Queries return only their immediate relationships_
 
+- `.update([ nodes ], [ labels ], data)`
+  - **`nodes`**: `Array` (or single) node to be updated
+  - **`labels`**: `Array` (or single) label to be added to Nodes.
+  - **`data`**: `Object` Data set to be merged with previous data, any duplicate keys will be overwritten.
+  - _edge labels cannot be updated, an error will be thrown_
+
 ## Internal Structure
 
 ### Database
