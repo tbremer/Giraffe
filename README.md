@@ -7,6 +7,21 @@ _A simple node & browser graph database_
 [![NPM Downloads](https://img.shields.io/npm/dm/giraffe.svg?style=flat-square)](https://www.npmjs.com/package/giraffe)
 [![LICENSE](https://img.shields.io/npm/l/giraffe.svg?style=flat-square)](https://github.com/tbremer/Giraffe/blob/master/LICENSE)
 
+## Install
+
+```shell
+npm install --save giraffe
+```
+
+## Use
+```javascript
+import Giraffe from 'giraffe';
+
+const db = new Giraffe();
+
+export default db;
+```
+
 ## Methods
 - `new Giraffe()`
   - Create the DB instace
@@ -77,6 +92,9 @@ _A simple node & browser graph database_
   edges: Array,
 }
 ```
+#### Node information
+- `properties` is the object passed into the `db.create` method.
+- `edges` is an array of Edge identity's before a query, after a query it is an array of references to the `Node`'s they represent
 
 ### Edge
 ```javascript
