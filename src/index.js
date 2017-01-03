@@ -208,3 +208,25 @@ Giraffe.prototype.query = function query (label, properties) {
 
   return results;
 };
+
+Giraffe.prototype.update = function nodes (nodes, labels, data) {
+  if (nodes.constructor !== Array) nodes = [ nodes ];
+  if (labels.constructor === Object) {
+    data = labels;
+    labels = null;
+  }
+  if (labels !== null && labels.constructor !== Array) labels = [ labels ];
+  if (!data) data = {};
+
+  for (const idx in nodes) {
+    const node = nodes[idx];
+    const isEdge = ('label' in node);
+
+    if (isEdge && labels) throw new TypeError('Edge Labels cannot be changed.');
+    if (labels) node.labels = node.labels.concat(...labels);
+
+    node.properties = Object.assign(new Obj(), node.properties, data);
+  }
+
+  return nodes;
+};

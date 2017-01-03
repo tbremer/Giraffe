@@ -250,4 +250,63 @@ describe('Giraffe', () => {
       expect(db.labels.edges[relationship][0]).toEqual(undefined);
     });
   });
+
+  describe('update', () => {
+    it('can update nodes', () => {
+      const node = db.create({ name: 'Cat' });
+      const result = db.update(node, { type: 'Tabby' });
+
+      expect(result).toBeAn('array');
+      expect(node).toIncludeKey('properties');
+      expect(node.properties).toInclude({
+        name: 'Cat',
+        type: 'Tabby'
+      });
+    });
+
+    it('can update edges', () => {
+      const cat = db.create({ name: 'Cat' });
+      const dog = db.create({ name: 'Dog' });
+      const edge = db.edge(cat, dog, relationship);
+      const results = db.update(edge, { 'for-fun': true });
+
+      expect(results).toBeAn('array');
+      expect(results[0]).toInclude({
+        properties: { 'for-fun': true }
+      });
+    });
+
+    it('throws error if trying to update edge labels', () => {
+      const cat = db.create({ name: 'Cat' });
+      const dog = db.create({ name: 'Dog' });
+      const edge = db.edge(cat, dog, relationship);
+
+      expect(() => {
+        db.update(edge, 'RUNS AWAY FROM');
+      })
+      .toThrow('Edge Labels cannot be changed.');
+    });
+
+    it('updates node labels', () => {
+      const node = db.create({ name: 'Cat' });
+      const [ updatedNode ] = db.update(node, label);
+
+      expect(updatedNode).toIncludeKey('labels');
+      expect(updatedNode.labels).toInclude('Animal');
+    });
+
+    it('handles arrays of nodes', () => {
+      db.create(label, { type: 'Cat' });
+      db.create(label, { type: 'Dog' });
+      db.create(label, { type: 'Whale' });
+
+      const results = db.update(db.query(label), 'Mammal');
+
+      expect(results.length).toEqual(3);
+      results.forEach(node => {
+        expect(node.labels).toInclude('Animal');
+        expect(node.labels).toInclude('Mammal');
+      });
+    });
+  });
 });
