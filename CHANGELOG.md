@@ -1,6 +1,14 @@
 Changelog
 ----
 
+### Wed Jan 4 13:29:17 2017 -0600
+- Commit: 93748aa95fe81ef6435b3ab839a5202ee28f25c5
+- Author: Tom Bremer <tom@tbremer.com>
+- Version: 1.3.0
+
+#### Changes:
+- Remove `Obj` creator
+
 ### Wed Jan 4 12:58:32 2017 -0600
 - Commit: 1e5ef48025c32588fd183ab7274b231d245bb460
 - Author: Tom Bremer <tom@tbremer.com>
