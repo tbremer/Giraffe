@@ -1,5 +1,3 @@
-import Obj from '../Obj';
-
 const validConstructors = [ String, Number ];
 
 function testConstructor(type) {
@@ -13,5 +11,13 @@ export default function Edge({ from, through, id, data, label }) {
   this.from = from.identity;
   this.through = through.identity;
   this.label = label;
-  this.properties = Object.assign(new Obj(), data);
+  this.properties = Object.assign({}, data);
 }
+
+export const shape = {
+  identity: Number,
+  properties: Object,
+  label: String,
+  from: Number,
+  through: Number
+};
