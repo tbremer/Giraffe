@@ -117,5 +117,4 @@ export default db;
 - When `db.query` returns `from` and `through` are references to the `Node`'s they represent
 
 ## Coming Features
-1. Allow dataset to be passed in with initial DB Creation (`new Giraffe({ data })`)
 1. Provide callback for when any action occurs (`new Giraffe(() => {})`)
