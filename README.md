@@ -8,7 +8,6 @@ _A simple node & browser graph database_
 [![LICENSE](https://img.shields.io/npm/l/giraffe.svg?style=flat-square)](https://github.com/tbremer/Giraffe/blob/master/LICENSE)
 
 ## Install
-
 ```shell
 npm install --save giraffe
 ```
@@ -96,6 +95,7 @@ export default db;
   edges: Array,
 }
 ```
+
 #### Node information
 - `properties` is the object passed into the `db.create` method.
 - `edges` is an array of Edge identity's before a query, after a query it is an array of references to the `Node`'s they represent

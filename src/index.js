@@ -1,6 +1,5 @@
 import Node, { shape as nodeShape } from './Node';
 import Edge, { shape as edgeShape } from './Edge';
-import Obj from './Obj';
 import { checkProperties, lookForKey, ensureObjectsShape } from './lib';
 
 export default function Giraffe(dataset) {
@@ -225,14 +224,14 @@ Giraffe.prototype.query = function query (label, properties) {
      * This works in a single degree of separation so a node can have an edge
      * to itself without stack-overflowing.
      */
-    const returnObj = Object.assign(new Obj(), node);
+    const returnObj = Object.assign({}, node);
 
     for (const edgeIdx in returnObj.edges) {
       const edgeId = returnObj.edges[edgeIdx];
-      const edge = Object.assign(new Obj(), this.edges[edgeId]);
+      const edge = Object.assign({}, this.edges[edgeId]);
       const throughNode = this.nodes[edge.through];
 
-      edge.through = Object.assign(new Obj(), throughNode);
+      edge.through = Object.assign({}, throughNode);
       edge.from = returnObj;
 
       returnObj.edges[edgeIdx] = edge;
@@ -260,7 +259,7 @@ Giraffe.prototype.update = function nodes (nodes, labels, data) {
     if (isEdge && labels) throw new TypeError('Edge Labels cannot be changed.');
     if (labels) node.labels = node.labels.concat(...labels);
 
-    node.properties = Object.assign(new Obj(), node.properties, data);
+    node.properties = Object.assign({}, node.properties, data);
   }
 
   return nodes;
