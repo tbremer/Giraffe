@@ -21,7 +21,7 @@ export function checkProperties(node, properties) {
  * Ensure key is in data
  */
 export function lookForKey(key, data) {
-  return data && key in data;
+  return Boolean(data && key in data);
 }
 
 /**
@@ -30,7 +30,8 @@ export function lookForKey(key, data) {
  * all values have the same constructors
  */
 export function ensureObjectsShape(objects, shape) {
-  if (objects.constructor !== Array) throw new Error('Objects needs to be an array');
+  if (!objects || objects.constructor !== Array) throw new Error('Objects needs to be an array');
+
   for (const idx in objects) {
     const object = objects[idx];
 
