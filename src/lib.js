@@ -15,3 +15,31 @@ export function checkProperties(node, properties) {
 
   return true;
 }
+
+/**
+ * Ensure data exists and
+ * Ensure key is in data
+ */
+export function lookForKey(key, data) {
+  return data && key in data;
+}
+
+/**
+ * Loop through array of objects to check
+ * all objects contain the correct keys and
+ * all values have the same constructors
+ */
+export function ensureObjectsShape(objects, shape) {
+  if (objects.constructor !== Array) throw new Error('Objects needs to be an array');
+  for (const idx in objects) {
+    const object = objects[idx];
+
+    for (const key in shape) {
+      if (!(key in object) || object[key].constructor !== shape[key]) {
+        throw new Error(`Incorrect shape for ${JSON.stringify(object)}`);
+      }
+    }
+  }
+
+  return true;
+}

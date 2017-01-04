@@ -1,5 +1,7 @@
 import expect from 'expect';
 import Giraffe from './';
+import Node from './Node';
+import Edge from './Edge';
 
 const label = 'Animal';
 const relationship = 'CHASES';
@@ -9,6 +11,68 @@ describe('Giraffe', () => {
 
   beforeEach(() => { db = new Giraffe(); }); //eslint-disable-line
   afterEach(() => { db = undefined; }); //eslint-disable-line
+
+  describe('database', () => {
+    it('allows for preloaded data', () => {
+      const nodes = [
+        new Node({ id: 0, data: { name: 'Cat' } }),
+        new Node({ id: 1, data: { name: 'Dog' } })
+      ];
+      const edges = [
+        new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
+      ];
+
+      db = new Giraffe({ nodes, edges });
+
+      expect(db.nodes.length).toEqual(2);
+      expect(db.edges.length).toEqual(1);
+      expect(db.labels.nodes).toEqual({});
+      expect(db.labels.edges).toIncludeKey('CHASES');
+    });
+
+    it('throws errors if edge does not have a label', () => {
+      const nodes = [
+        new Node({ id: 0, data: { name: 'Cat' } }),
+        new Node({ id: 1, data: { name: 'Dog' } })
+      ];
+      const edges = [
+        new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
+      ];
+
+      delete edges[0].label;
+
+      expect(() => new Giraffe({ nodes, edges }))
+      .toThrow(/Incorrect shape for/);
+    });
+
+    it('throws errors if Node does not have the correct shape', () => {
+      const nodes = [ { identity: 'foo' } ];
+
+      expect(() => new Giraffe({ nodes }))
+      .toThrow(/Incorrect shape for/);
+    });
+
+    it('throws errors if Edge does not have the correct shape', () => {
+      const edges = [ { identity: 'foo' } ];
+
+      expect(() => new Giraffe({ edges }))
+      .toThrow(/Incorrect shape for/);
+    });
+
+    it('throws errors if creation is sent a non-array for nodes', () => {
+      const nodes = { identity: 'foo' };
+
+      expect(() => new Giraffe({ nodes }))
+      .toThrow(/Objects needs to be an array/);
+    });
+
+    it('throws errors if creation is sent a non-array for edges', () => {
+      const edges = { from: 0, through: 1, label: '', identity: 'foo' };
+
+      expect(() => new Giraffe({ edges }))
+      .toThrow(/Objects needs to be an array/);
+    });
+  });
 
   describe('create', () => {
     it('can create nodes', () => {
@@ -194,6 +258,8 @@ describe('Giraffe', () => {
       expect(results.length).toEqual(1);
       expect(results[0].properties).toInclude({ name: 'Cat' });
     });
+
+    it('supports nested queries');
   });
 
   describe('remove', () => {

@@ -1,15 +1,50 @@
-import Node from './Node';
-import Edge from './Edge';
+import Node, { shape as nodeShape } from './Node';
+import Edge, { shape as edgeShape } from './Edge';
 import Obj from './Obj';
-import { checkProperties } from './lib';
+import { checkProperties, lookForKey, ensureObjectsShape } from './lib';
 
-export default function Giraffe() {
+export default function Giraffe(dataset) {
   this.nodes = [];
   this.edges = [];
   this.labels = {
     edges: {},
     nodes: {}
   };
+
+  /**
+   * for both Nodes and Edges
+   * check if dataset exists and if key is within it
+   * Ensure correct shape for each object
+   */
+  if (lookForKey('nodes', dataset) && ensureObjectsShape(dataset.nodes, nodeShape)) this.nodes = dataset.nodes;
+  if (lookForKey('edges', dataset) && ensureObjectsShape(dataset.edges, edgeShape)) this.edges = dataset.edges;
+
+  /**
+   * Build up this.labels object for Nodes
+   */
+  for (const idx in this.nodes) {
+    const node = this.nodes[idx];
+    if (!node.labels.length) continue;
+
+    for (const idx in node.labels) {
+      const label = node.labels[idx];
+
+      if (!(label in this.labels.nodes)) this.labels.nodes[label] = [];
+      this.labels.nodes[label].push(node.identity);
+    }
+  }
+
+  /**
+   * Build up this.labels object for Edges
+   */
+  for (const idx in this.edges) {
+    const edge = this.edges[idx];
+    if (!edge.label) throw new Error('All Edges need a label');
+    const label = edge.label;
+
+    if (!(label in this.labels.edges)) this.labels.edges[label] = [];
+    this.labels.edges[label].push(edge.identity);
+  }
 }
 
 Giraffe.prototype.create = function create (label, data) {

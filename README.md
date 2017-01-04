@@ -23,7 +23,11 @@ export default db;
 ```
 
 ## Methods
-- `new Giraffe()`
+- `new Giraffe(data)`
+  - **`data`**: `Object` _Optional_
+    - _Should be in the shape of `{ nodes: [], edges: [] }`_
+    - _Labels are created dynamically based on data passed in_
+    - _`Nodes` and `Edges` are checked for their correct shape._
   - Create the DB instace
 
 - `.create(label, data)`
