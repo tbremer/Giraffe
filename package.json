@@ -8,7 +8,7 @@
     "build": "rollup -c",
     "pretest": "eslint src/",
     "test": "mocha --compilers js:babel-register --recursive src/",
-    "test:watch": "npm run test -- --watch --reporter min"
+    "test:watch": "mocha --compilers js:babel-register  --watch --reporter min --recursive src/"
   },
   "repository": {
     "type": "git",
