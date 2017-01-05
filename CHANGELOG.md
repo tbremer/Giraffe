@@ -1,8 +1,18 @@
 Changelog
 ----
 
+### Thu Jan 5 14:52:24 2017 -0600
+- Commit: `b365d55c68fb83f6f42a676ba753b7aec83c3dcb`
+- Author: Tom Bremer <tom@tbremer.com>
+- Version: 1.4.2
+
+#### Changes
+- Update Giraffe methods so that Arrays are mutated instead of creating new.
+- Allow `Graffe.create` to take arrays of labels.
+- Tests where appropriate.
+
 ### Thu Jan 5 01:16:07 2017 -0600
-- Commit: 1bb3ec4808bea50b01a8ecfb8db2ed2c98d8cbcb
+- Commit: `1bb3ec4808bea50b01a8ecfb8db2ed2c98d8cbcb`
 - Author: Tom Bremer <tom@tbremer.com>
 - Version: 1.4.1
 
@@ -10,7 +20,7 @@ Changelog
 - Add `Array.from` polyfill for browsers that do not support it.
 
 ### Thu Jan 5 00:51:59 2017 -0600
-- Commit: b8ef6a2a58931916df75951c1d2fcc69b0e95d89
+- Commit: `b8ef6a2a58931916df75951c1d2fcc69b0e95d89`
 - Author: Tom Bremer <tom@tbremer.com>
 - Version: 1.4.0
 
@@ -25,7 +35,7 @@ Changelog
   - _does not affect bundle_
 
 ### Wed Jan 4 13:29:17 2017 -0600
-- Commit: 93748aa95fe81ef6435b3ab839a5202ee28f25c5
+- Commit: `93748aa95fe81ef6435b3ab839a5202ee28f25c5`
 - Author: Tom Bremer <tom@tbremer.com>
 - Version: 1.3.0
 
@@ -33,7 +43,7 @@ Changelog
 - Remove `Obj` creator
 
 ### Wed Jan 4 12:58:32 2017 -0600
-- Commit: 1e5ef48025c32588fd183ab7274b231d245bb460
+- Commit: `1e5ef48025c32588fd183ab7274b231d245bb460`
 - Author: Tom Bremer <tom@tbremer.com>
 - Version: 1.2.0
 
