@@ -1,4 +1,4 @@
-import expect from 'expect';
+import expect, { createSpy } from 'expect';
 import Giraffe from './';
 import Node from './Node';
 import Edge from './Edge';
@@ -13,64 +13,180 @@ describe('Giraffe', () => {
   afterEach(() => { db = undefined; }); //eslint-disable-line
 
   describe('database', () => {
-    it('allows for preloaded data', () => {
-      const nodes = [
-        new Node({ id: 0, data: { name: 'Cat' } }),
-        new Node({ id: 1, data: { name: 'Dog' } })
-      ];
-      const edges = [
-        new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
-      ];
+    describe('initial data', () => {
+      it('allows for preloaded data', () => {
+        const nodes = [
+          new Node({ id: 0, data: { name: 'Cat' } }),
+          new Node({ id: 1, data: { name: 'Dog' } })
+        ];
+        const edges = [
+          new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
+        ];
 
-      db = new Giraffe({ nodes, edges });
+        db = new Giraffe({ nodes, edges });
 
-      expect(db.nodes.length).toEqual(2);
-      expect(db.edges.length).toEqual(1);
-      expect(db.labels.nodes).toEqual({});
-      expect(db.labels.edges).toIncludeKey('CHASES');
+        expect(db.nodes.length).toEqual(2);
+        expect(db.edges.length).toEqual(1);
+        expect(db.labels.nodes).toEqual({});
+        expect(db.labels.edges).toIncludeKey('CHASES');
+      });
+
+      it('throws errors if edge does not have a label', () => {
+        const nodes = [
+          new Node({ id: 0, data: { name: 'Cat' } }),
+          new Node({ id: 1, data: { name: 'Dog' } })
+        ];
+        const edges = [
+          new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
+        ];
+
+        delete edges[0].label;
+
+        expect(() => new Giraffe({ nodes, edges }))
+        .toThrow(/Incorrect shape for/);
+      });
+
+      it('throws errors if Node does not have the correct shape', () => {
+        const nodes = [ { identity: 'foo' } ];
+
+        expect(() => new Giraffe({ nodes }))
+        .toThrow(/Incorrect shape for/);
+      });
+
+      it('throws errors if Edge does not have the correct shape', () => {
+        const edges = [ { identity: 'foo' } ];
+
+        expect(() => new Giraffe({ edges }))
+        .toThrow(/Incorrect shape for/);
+      });
+
+      it('throws errors if creation is sent a non-array for nodes', () => {
+        const nodes = { identity: 'foo' };
+
+        expect(() => new Giraffe({ nodes }))
+        .toThrow(/Objects needs to be an array/);
+      });
+
+      it('throws errors if creation is sent a non-array for edges', () => {
+        const edges = { from: 0, through: 1, label: '', identity: 'foo' };
+
+        expect(() => new Giraffe({ edges }))
+        .toThrow(/Objects needs to be an array/);
+      });
     });
 
-    it('throws errors if edge does not have a label', () => {
-      const nodes = [
-        new Node({ id: 0, data: { name: 'Cat' } }),
-        new Node({ id: 1, data: { name: 'Dog' } })
-      ];
-      const edges = [
-        new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
-      ];
+    describe('callback', () => {
+      it('handles callback as first argument', () => {
+        const callback = createSpy();
 
-      delete edges[0].label;
+        db = new Giraffe(callback);
 
-      expect(() => new Giraffe({ nodes, edges }))
-      .toThrow(/Incorrect shape for/);
+        expect(db.callback).toEqual(callback);
+        expect(db.nodes).toEqual([]);
+        expect(db.edges).toEqual([]);
+        expect(db.labels).toEqual({
+          nodes: {},
+          edges: {}
+        });
+      });
+
+      it('calls callback on `create`', () => {
+        const callback = createSpy();
+
+        db = new Giraffe(callback);
+        const node = db.create({ name: 'Cat' });
+
+        expect(callback).toHaveBeenCalled();
+        expect(callback).toHaveBeenCalledWith('create', node);
+      });
+
+      it('calls callback on `update`', () => {
+        const callback = createSpy();
+
+        db = new Giraffe(callback);
+
+        const updatedNode = db.update(db.create({ name: 'Cat' }), { type: 'Tabby' });
+
+        expect(callback).toHaveBeenCalled();
+        expect(callback).toHaveBeenCalledWith('update', updatedNode);
+      });
+
+      it('calls callback on `remove`', () => {
+        const callback = createSpy();
+
+        db = new Giraffe(callback);
+
+        const node = db.create({ name: 'Cat' });
+
+        db.remove(node);
+
+        expect(callback).toHaveBeenCalled();
+        expect(callback).toHaveBeenCalledWith('remove');
+      });
+
+      it('calls callback on `edge`', () => {
+        const callback = createSpy();
+
+        db = new Giraffe(callback);
+
+        const cat = db.create({ name: 'Cat' });
+        const dog = db.create({ name: 'Dog' });
+        const [ edge ] = db.edge(cat, dog, relationship);
+        const calledWith = [
+          {
+            ...edge,
+            from: cat,
+            through: dog
+          }
+        ];
+
+        expect(callback).toHaveBeenCalled();
+
+        const [ callbackType, callbackNodes ] = callback.calls[2].arguments;
+
+        expect(callbackType).toEqual('edge');
+        expect(callbackNodes).toMatch(calledWith);
+      });
+
+      it('calls callback on `query`', () => {
+        const callback = createSpy();
+
+        db = new Giraffe(callback);
+
+        db.create(label, { name: 'Cat' });
+        db.create(label, { name: 'Dog' });
+        db.create(label, { name: 'CatDog' });
+
+        const results = db.query(label);
+
+        expect(callback).toHaveBeenCalled();
+
+        const [ callbackType, callbackData ] = callback.calls[3].arguments;
+
+        expect(callbackType).toEqual('query');
+        expect(callbackData).toEqual(results);
+      });
     });
 
-    it('throws errors if Node does not have the correct shape', () => {
-      const nodes = [ { identity: 'foo' } ];
+    describe('initial data and callback', () => {
+      it('handles both', () => {
+        const callback = createSpy();
+        const nodes = [
+          new Node({ id: 0, data: { name: 'Cat' } }),
+          new Node({ id: 1, data: { name: 'Dog' } })
+        ];
+        const edges = [
+          new Edge({ from: nodes[0], through: nodes[1], label: 'CHASES', id: 0 })
+        ];
 
-      expect(() => new Giraffe({ nodes }))
-      .toThrow(/Incorrect shape for/);
-    });
+        db = new Giraffe({ nodes, edges }, callback);
 
-    it('throws errors if Edge does not have the correct shape', () => {
-      const edges = [ { identity: 'foo' } ];
-
-      expect(() => new Giraffe({ edges }))
-      .toThrow(/Incorrect shape for/);
-    });
-
-    it('throws errors if creation is sent a non-array for nodes', () => {
-      const nodes = { identity: 'foo' };
-
-      expect(() => new Giraffe({ nodes }))
-      .toThrow(/Objects needs to be an array/);
-    });
-
-    it('throws errors if creation is sent a non-array for edges', () => {
-      const edges = { from: 0, through: 1, label: '', identity: 'foo' };
-
-      expect(() => new Giraffe({ edges }))
-      .toThrow(/Objects needs to be an array/);
+        expect(db.nodes.length).toEqual(2);
+        expect(db.edges.length).toEqual(1);
+        expect(db.labels.nodes).toEqual({});
+        expect(db.labels.edges).toIncludeKey('CHASES');
+        expect(db.callback).toEqual(callback);
+      });
     });
   });
 

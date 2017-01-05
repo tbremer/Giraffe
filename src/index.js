@@ -1,14 +1,20 @@
 import Node, { shape as nodeShape } from './Node';
 import Edge, { shape as edgeShape } from './Edge';
-import { checkProperties, lookForKey, ensureObjectsShape } from './lib';
+import { checkProperties, lookForKey, ensureObjectsShape, buildEdges } from './lib';
 
-export default function Giraffe(dataset) {
+export default function Giraffe(dataset, callback) {
+  if (dataset && dataset.constructor === Function && !callback) {
+    callback = dataset;
+    dataset = {};
+  }
+
   this.nodes = [];
   this.edges = [];
   this.labels = {
     edges: {},
     nodes: {}
   };
+  this.callback = callback;
 
   /**
    * for both Nodes and Edges
@@ -64,7 +70,33 @@ Giraffe.prototype.create = function create (label, data) {
     labelObj[label] = [ ...labelObj[label], node.identity ];
   }
 
+  if (this.callback) this.callback('create', node);
+
   return node;
+};
+
+Giraffe.prototype.update = function nodes (nodes, labels, data) {
+  if (nodes.constructor !== Array) nodes = [ nodes ];
+  if (labels.constructor === Object) {
+    data = labels;
+    labels = null;
+  }
+  if (labels !== null && labels.constructor !== Array) labels = [ labels ];
+  if (!data) data = {};
+
+  for (const idx in nodes) {
+    const node = nodes[idx];
+    const isEdge = ('label' in node);
+
+    if (isEdge && labels) throw new TypeError('Edge Labels cannot be changed.');
+    if (labels) node.labels = node.labels.concat(...labels);
+
+    node.properties = Object.assign({}, node.properties, data);
+  }
+
+  if (this.callback) this.callback('update', nodes);
+
+  return nodes;
 };
 
 Giraffe.prototype.remove = function remove (nodes) {
@@ -137,6 +169,8 @@ Giraffe.prototype.remove = function remove (nodes) {
      */
     this.nodes[identity] = undefined;
   }
+
+  if (this.callback) this.callback('remove');
 };
 
 Giraffe.prototype.edge = function edge (from, through, label, data) {
@@ -162,6 +196,8 @@ Giraffe.prototype.edge = function edge (from, through, label, data) {
       edges.push(edg);
     }
   }
+
+  if (this.callback) this.callback('edge', buildEdges.call(this, edges));
 
   return edges;
 };
@@ -240,27 +276,7 @@ Giraffe.prototype.query = function query (label, properties) {
     results.push(returnObj);
   }
 
+  if (this.callback) this.callback('query', results);
+
   return results;
-};
-
-Giraffe.prototype.update = function nodes (nodes, labels, data) {
-  if (nodes.constructor !== Array) nodes = [ nodes ];
-  if (labels.constructor === Object) {
-    data = labels;
-    labels = null;
-  }
-  if (labels !== null && labels.constructor !== Array) labels = [ labels ];
-  if (!data) data = {};
-
-  for (const idx in nodes) {
-    const node = nodes[idx];
-    const isEdge = ('label' in node);
-
-    if (isEdge && labels) throw new TypeError('Edge Labels cannot be changed.');
-    if (labels) node.labels = node.labels.concat(...labels);
-
-    node.properties = Object.assign({}, node.properties, data);
-  }
-
-  return nodes;
 };

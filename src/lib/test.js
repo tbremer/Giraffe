@@ -2,7 +2,8 @@ import expect from 'expect';
 import {
   checkProperties,
   lookForKey,
-  ensureObjectsShape
+  ensureObjectsShape,
+  buildEdges
 } from './';
 
 describe('lib', () => {
@@ -92,6 +93,20 @@ describe('lib', () => {
       const shape = { foo: Number, bar: Boolean };
 
       expect(ensureObjectsShape(objects, shape)).toBe(true);
+    });
+  });
+
+  describe('buildEdges', () => {
+    it('builds edges', () => {
+      const nodes = [
+        { identity: 0, properties: { name: 'Cat' }, edges: [ 0 ], labels: [] },
+        { identity: 1, properties: { name: 'Dog' }, edges: [], labels: [] }
+      ];
+      const edges = [ { identity: 0, label: 'CHASES', properties: {}, from: 0, through: 1 } ];
+      const assert = buildEdges.call({ nodes, edges }, edges);
+      const expected = [ { identity: 0, label: 'CHASES', properties: {}, from: nodes[0], through: nodes[1] } ];
+
+      expect(assert).toMatch(expected);
     });
   });
 });
