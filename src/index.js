@@ -1,3 +1,4 @@
+import './vendor/array.from';
 import Node, { shape as nodeShape } from './Node';
 import Edge, { shape as edgeShape } from './Edge';
 import { checkProperties, lookForKey, ensureObjectsShape, buildEdges } from './lib';
