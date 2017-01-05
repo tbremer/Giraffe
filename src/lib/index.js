@@ -44,3 +44,21 @@ export function ensureObjectsShape(objects, shape) {
 
   return true;
 }
+
+/**
+ * Build Edges when all Nodes are known
+ * `this` is bound in it's callee
+ */
+export function buildEdges(edges) {
+  const built = [];
+
+  for (const idx in edges) {
+    const edge = edges[idx];
+    const from = Object.assign({}, this.nodes[edge.from]); // eslint-disable-line
+    const through = Object.assign({}, this.nodes[edge.through]); // eslint-disable-line
+
+    built.push(Object.assign({}, edge, { from, through }));
+  }
+
+  return built;
+}
