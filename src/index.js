@@ -1,4 +1,3 @@
-// import './vendor/array.from';
 import Node, { shape as nodeShape } from './Node';
 import Edge, { shape as edgeShape } from './Edge';
 import { checkProperties, lookForKey, ensureObjectsShape, buildEdges } from './lib';
@@ -62,14 +61,12 @@ Giraffe.prototype.create = function create (label, data) {
   const id = this.nodes.length;
   const node = new Node({ id, label, data });
 
-  // this.nodes = [ ...this.nodes, node ];
   this.nodes.push(node);
 
   if (label) {
     const labelObj = this.labels.nodes;
 
     if (!(label in labelObj)) labelObj[label] = [];
-    // labelObj[label] = [ ...labelObj[label], node.identity ];
     labelObj[label].push(node.identity);
   }
 
@@ -192,11 +189,9 @@ Giraffe.prototype.edge = function edge (from, through, label, data) {
       const labelObj = this.labels.edges;
 
       if (!(label in labelObj)) labelObj[label] = [];
-      // labelObj[label] = [ ...labelObj[label], edg.identity ];
       labelObj[label].push(edg.identity);
 
       _from.edges.push(id);
-      // this.edges = [ ...this.edges, edg ];
       this.edges.push(edg);
       edges.push(edg);
     }
