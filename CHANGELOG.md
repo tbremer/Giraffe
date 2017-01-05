@@ -1,6 +1,21 @@
 Changelog
 ----
 
+### Thu
+- Commit:
+- Author:
+- Version: 1.4.0
+
+#### Changes
+- allow for callback in DB `new Giraffe(callback)`.
+- create buildEdges for quick edge calculation
+  - this takes edges and binds all of it's nodes blindly.
+  - add tests
+- move `db.update` higher in index
+- add conditional callback calling in all db methods
+- Add babel transform rest-spread for making unit tests easier to write.
+  - _does not affect bundle_
+
 ### Wed Jan 4 13:29:17 2017 -0600
 - Commit: 93748aa95fe81ef6435b3ab839a5202ee28f25c5
 - Author: Tom Bremer <tom@tbremer.com>

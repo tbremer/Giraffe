@@ -22,20 +22,26 @@ export default db;
 ```
 
 ## Methods
-- `new Giraffe(data)`
+- `new Giraffe(data, callback)`
   - **`data`**: `Object` _Optional_
     - _Should be in the shape of `{ nodes: [], edges: [] }`_
     - _Labels are created dynamically based on data passed in_
     - _`Nodes` and `Edges` are checked for their correct shape._
-  - Create the DB instace
+  - **`callback`**: `Function` _Optional_
+    - _Can be passed first if no data is supplied_
+    - _Callback is called just before returning on each Database Method_
+  - Create the DB instance
+
 
 - `.create(label, data)`
   - **`label`**: `String` _Optional_
   - **`data`**: `Object`
 
+
 - `.remove(nodes)`
   - **`nodes`**: `Array` _Array of Nodes to be removed from graph_
     - _this is automatically converted to an Array if a single node is passed in._
+
 
 - `.edge([ from ], [ to ], label, properties)`
   - **`from`** `Array` _Array of Nodes where edge originates_
@@ -43,12 +49,14 @@ export default db;
   - **`label`**: `String` _Optional_
   - **`properties`**: `Object` _Optional_
 
+
 - `.query(label, properties)`
   - **`label`**: `String` _Optional_
   - **`properties`**: `Object` _Optional_
     - you can search for an edge with the property key `_edges`
   - _An empty query returns all nodes_
   - _Queries return only their immediate relationships_
+
 
 - `.update([ nodes ], [ labels ], data)`
   - **`nodes`**: `Array` (or single) node to be updated
@@ -117,4 +125,7 @@ export default db;
 - When `db.query` returns `from` and `through` are references to the `Node`'s they represent
 
 ## Coming Features
-1. Provide callback for when any action occurs (`new Giraffe(() => {})`)
+1. Nested Queries
+1. Better `Node` & `Id` creation
+1. Typescript?
+1. ???
