@@ -1,9 +1,9 @@
 Changelog
 ----
 
-### Thu
-- Commit:
-- Author:
+### Thu Jan 5 00:51:59 2017 -0600
+- Commit: b8ef6a2a58931916df75951c1d2fcc69b0e95d89
+- Author: Tom Bremer <tom@tbremer.com>
 - Version: 1.4.0
 
 #### Changes
