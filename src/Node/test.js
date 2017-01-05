@@ -41,4 +41,16 @@ describe('Node', () => {
 
     expect(node).toInclude({ properties: data });
   });
+
+  it('accepts multiple labels', () => {
+    const labels = [ 'foo', 'bar' ];
+    const node = new Node({ id: 123, label: labels });
+
+    expect(node.labels).toMatch(labels);
+  });
+
+  it('throws an error without an identity', () => {
+    expect(() => new Node({}))
+    .toThrow(`All Node's require an id`);
+  });
 });

@@ -34,8 +34,9 @@ export default db;
 
 
 - `.create(label, data)`
-  - **`label`**: `String` _Optional_
+  - **`label`**: `String` || `Array` _Optional_
   - **`data`**: `Object`
+  - _`label` is type checked and coerced into a Array within the `Node` constructor_
 
 
 - `.remove(nodes)`
