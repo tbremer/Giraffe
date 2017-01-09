@@ -188,6 +188,33 @@ describe('Giraffe', () => {
         expect(db.callback).toEqual(callback);
       });
     });
+
+    describe('tracks IDs', () => {
+      it('has an IDs key', () => {
+        expect(db).toIncludeKey('_ids');
+        expect(db._ids).toBeAn('array');
+      });
+
+      it('has a generateId function', () => {
+        expect(db).toIncludeKey('_generateId');
+        expect(db._generateId).toBeAn('function');
+      });
+
+      it('hidden props do not show up on enumerations', () => {
+        expect(Object.keys(db)).toExclude('_ids');
+        expect(Object.keys(db)).toExclude('_generateId');
+      });
+
+      it('increments with each creation', () => {
+        expect(db._ids.length).toBe(0);
+        const cat = db.create({ name: 'Cat' });
+        expect(db._ids.length).toBe(1);
+        const dog = db.create({ name: 'Dog' });
+        expect(db._ids.length).toBe(2);
+        db.edge(cat, dog, relationship);
+        expect(db._ids.length).toBe(3);
+      });
+    });
   });
 
   describe('create', () => {
@@ -203,22 +230,12 @@ describe('Giraffe', () => {
         'labels'
       ]);
       expect(node).toInclude({
-        identity: 0,
         labels: [ 'Animal' ],
         properties: {
           name: 'Fido',
           type: 'dog'
         }
       });
-    });
-
-    it('nodes increment properly', () => {
-      const nodeA = db.create(label, { name: 'Fido', type: 'dog' });
-      const nodeB = db.create(label, { name: 'Fido', type: 'dog' });
-
-      expect(db.nodes.length).toEqual(2);
-      expect(nodeA.identity).toEqual(0);
-      expect(nodeB.identity).toEqual(1);
     });
   });
 
@@ -238,9 +255,8 @@ describe('Giraffe', () => {
         'properties'
       ]);
       expect(edge).toInclude({
-        identity: 0,
-        from: 0,
-        through: 1,
+        from: nodeA.identity,
+        through: nodeB.identity,
         label: 'CHASES',
         properties: {}
       });
@@ -281,21 +297,21 @@ describe('Giraffe', () => {
       expect(results.length).toEqual(3);
     });
 
-    it('nodes returned in query', () => {
+    it('nodes returned', () => {
       db.create(label, { name: 'Cat' });
       db.create(label, { name: 'Dog' });
       db.create(label, { name: 'CatDog' });
 
       const results = db.query(label, { name: 'CatDog' });
+      const [ res ] = results;
       expect(results.length).toEqual(1);
-      expect(results[0]).toInclude({
-        identity: 2,
+      expect(res).toInclude({
         labels: [ label ],
         properties: { name: 'CatDog' }
       });
     });
 
-    it('edges returned in search', () => {
+    it('edges returned', () => {
       const cat = db.create(label, { name: 'Cat' });
       const dog = db.create(label, { name: 'Dog' });
       db.create(label, { name: 'CatDog' });
@@ -316,7 +332,6 @@ describe('Giraffe', () => {
       expect(results.length).toEqual(1);
       expect(edge).toInclude({
         label: 'CHASES',
-        identity: 0,
         from: cat,
         through: dog
       });
@@ -381,14 +396,14 @@ describe('Giraffe', () => {
   describe('remove', () => {
     it('removes nodes', () => {
       const nodeA = db.create(label, { name: 'Dog' });
-      db.create(label, { name: 'Cat' });
+      const nodeB = db.create(label, { name: 'Cat' });
 
       expect(db.nodes.length).toEqual(2);
 
       db.remove(nodeA);
 
-      expect(db.nodes.length).toEqual(2);
-      expect(db.nodes[0]).toEqual(undefined);
+      expect(db.nodes.length).toEqual(1);
+      expect(db.nodes[0]).toEqual(nodeB);
     });
 
     it('removes edges when nodes removed', () => {
@@ -401,22 +416,21 @@ describe('Giraffe', () => {
 
       db.remove(nodeA);
 
-      expect(db.nodes.length).toEqual(2);
-      expect(db.edges.length).toEqual(1);
-      expect(db.nodes[0]).toEqual(undefined);
-      expect(db.edges[0]).toEqual(undefined);
+      expect(db.nodes.length).toEqual(1);
+      expect(db.edges.length).toEqual(0);
+      expect(db.nodes[0]).toEqual(nodeB);
     });
 
     it('removes reference to nodes in labels.nodes', () => {
-      db.create(label, { name: 'Cat' });
-      const node = db.create(label, { name: 'Dog' });
+      const nodeA = db.create(label, { name: 'Cat' });
+      const nodeB = db.create(label, { name: 'Dog' });
 
-      db.remove(node);
+      db.remove(nodeB);
 
-      expect(db.nodes.length).toEqual(2);
+      expect(db.nodes.length).toEqual(1);
       expect(db.nodes[1]).toEqual(undefined);
       expect(db.labels.nodes[label].length).toEqual(1);
-      expect(db.labels.nodes[label][0]).toEqual(0);
+      expect(db.labels.nodes[label][0]).toEqual(nodeA.identity);
     });
 
     it('removes reference to nodes in labels.edges', () => {
@@ -426,8 +440,8 @@ describe('Giraffe', () => {
       db.edge(cat, dog, relationship);
       db.remove(cat);
 
-      expect(db.nodes.length).toEqual(2);
-      expect(db.nodes[0]).toEqual(undefined);
+      expect(db.nodes.length).toEqual(1);
+      expect(db.nodes[0]).toEqual(dog);
       expect(db.labels.edges[relationship].length).toEqual(0);
       expect(db.labels.edges[relationship][0]).toEqual(undefined);
     });

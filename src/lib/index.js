@@ -54,11 +54,38 @@ export function buildEdges(edges) {
 
   for (const idx in edges) {
     const edge = edges[idx];
-    const from = Object.assign({}, this.nodes[edge.from]); // eslint-disable-line
-    const through = Object.assign({}, this.nodes[edge.through]); // eslint-disable-line
+    const from = Object.assign({}, findById(edge.from, this.nodes)); // eslint-disable-line
+    const through = Object.assign({}, findById(edge.through, this.nodes)); // eslint-disable-line
 
     built.push(Object.assign({}, edge, { from, through }));
   }
 
   return built;
+}
+
+/**
+ * Search a group for an object containing the proper identity
+ */
+export function findById(id, group) {
+  for (const idx in group) {
+    const node = group[idx];
+
+    if ('identity' in node && node.identity === id) return node;
+  }
+}
+
+/**
+ * Given an ID and a group
+ * return it's index
+ * or -1
+ * based on IDs
+ */
+export function findIndexById(id, group) {
+  for (const idx in group) {
+    const node = group[idx];
+
+    if ('identity' in node && node.identity === id) return idx;
+  }
+
+  return (-1);
 }

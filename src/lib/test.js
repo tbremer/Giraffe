@@ -1,9 +1,11 @@
 import expect from 'expect';
 import {
+  buildEdges,
   checkProperties,
-  lookForKey,
   ensureObjectsShape,
-  buildEdges
+  findById,
+  findIndexById,
+  lookForKey
 } from './';
 
 describe('lib', () => {
@@ -107,6 +109,53 @@ describe('lib', () => {
       const expected = [ { identity: 0, label: 'CHASES', properties: {}, from: nodes[0], through: nodes[1] } ];
 
       expect(assert).toMatch(expected);
+    });
+  });
+
+  describe('findById', () => {
+    const foo = {
+      identity: 123,
+      foo: 'bar'
+    };
+
+    const nodes = [
+      { identity: 0, a: 'b' },
+      { identity: 1, c: 'd' },
+      { identity: 2, e: 'f' },
+      foo,
+      { identity: 3, g: 'h' },
+    ];
+
+    expect(findById(123, nodes)).toEqual(foo);
+  });
+
+  describe('findIndexById', () => {
+    it('returns correct id', () => {
+      const foo = {
+        identity: 123,
+        foo: 'bar'
+      };
+
+      const nodes = [
+        { identity: 0, a: 'b' },
+        { identity: 1, c: 'd' },
+        { identity: 2, e: 'f' },
+        foo,
+        { identity: 3, g: 'h' },
+      ];
+
+      expect(findIndexById(123, nodes)).toEqual(3);
+    });
+
+    it('returns -1', () => {
+      const nodes = [
+        { identity: 0, a: 'b' },
+        { identity: 1, c: 'd' },
+        { identity: 2, e: 'f' },
+        { identity: 3, g: 'h' },
+      ];
+
+      expect(findIndexById(123, nodes)).toEqual(-1);
     });
   });
 });

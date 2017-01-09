@@ -1,12 +1,29 @@
 import Node, { shape as nodeShape } from './Node';
 import Edge, { shape as edgeShape } from './Edge';
-import { checkProperties, lookForKey, ensureObjectsShape, buildEdges } from './lib';
+import guid from './ID';
+import { checkProperties, lookForKey, ensureObjectsShape, buildEdges, findById, findIndexById } from './lib';
 
 export default function Giraffe(dataset, callback) {
   if (dataset && dataset.constructor === Function && !callback) {
     callback = dataset;
     dataset = {};
   }
+
+  Object.defineProperty(this, '_ids', { value: [] });
+  Object.defineProperty(
+    this,
+    '_generateId',
+    {
+      value: function generateId() {
+        const id = guid();
+
+        if (this._ids.indexOf(id) !== -1) return this._generateId();
+
+        this._ids.push(id);
+
+        return id;
+      }
+    });
 
   this.nodes = [];
   this.edges = [];
@@ -25,10 +42,12 @@ export default function Giraffe(dataset, callback) {
   if (lookForKey('edges', dataset) && ensureObjectsShape(dataset.edges, edgeShape)) this.edges = dataset.edges;
 
   /**
+   * Add id's to db._ids array
    * Build up this.labels object for Nodes
    */
   for (const idx in this.nodes) {
     const node = this.nodes[idx];
+    this._ids.push(node.identity);
     if (!node.labels.length) continue;
 
     for (const idx in node.labels) {
@@ -40,10 +59,12 @@ export default function Giraffe(dataset, callback) {
   }
 
   /**
+   * Add id's to db._ids array
    * Build up this.labels object for Edges
    */
   for (const idx in this.edges) {
     const edge = this.edges[idx];
+    this._ids.push(edge.identity);
     if (!edge.label) throw new Error('All Edges need a label');
     const label = edge.label;
 
@@ -58,7 +79,7 @@ Giraffe.prototype.create = function create (label, data) {
     label = null;
   }
 
-  const id = this.nodes.length;
+  const id = this._generateId();
   const node = new Node({ id, label, data });
 
   this.nodes.push(node);
@@ -112,7 +133,7 @@ Giraffe.prototype.remove = function remove (nodes) {
      */
     for (const e in node.edges) {
       const edgeId = node.edges[e];
-      const edge = this.edges[edgeId];
+      const edge = findById(edgeId, this.edges);
       const { label, identity } = edge;
 
       if (label in this.labels.edges) {
@@ -123,7 +144,7 @@ Giraffe.prototype.remove = function remove (nodes) {
       /**
        * Remove the edge
        */
-      this.edges[edgeId] = undefined;
+      this.edges.splice(findIndexById(edgeId, this.edges), 1);
     }
 
     /**
@@ -167,7 +188,7 @@ Giraffe.prototype.remove = function remove (nodes) {
     /**
      * finally, remove node.
      */
-    this.nodes[identity] = undefined;
+    this.nodes.splice(findIndexById(identity, this.nodes), 1);
   }
 
   if (this.callback) this.callback('remove');
@@ -184,7 +205,7 @@ Giraffe.prototype.edge = function edge (from, through, label, data) {
 
     for (const t in through) {
       const _through = through[t];
-      const id = this.edges.length;
+      const id = this._generateId();
       const edg = new Edge({ id, label, data, from: _from, through: _through });
       const labelObj = this.labels.edges;
 
@@ -239,7 +260,7 @@ Giraffe.prototype.query = function query (label, properties) {
 
         for (const idFromLabel in this.labels.edges[edgeName]) {
           const id = this.labels.edges[edgeName][idFromLabel];
-          const edge = this.edges[id];
+          const edge = findById(id, this.edges);
 
           if (!edge) continue; //edges can be undefined from the `remove` method.
           internalNodeIdsFromEdge.push(edge.from);
@@ -262,10 +283,11 @@ Giraffe.prototype.query = function query (label, properties) {
      */
     const returnObj = Object.assign({}, node);
 
+
     for (const edgeIdx in returnObj.edges) {
       const edgeId = returnObj.edges[edgeIdx];
-      const edge = Object.assign({}, this.edges[edgeId]);
-      const throughNode = this.nodes[edge.through];
+      const edge = Object.assign({}, findById(edgeId, this.edges));
+      const throughNode = findById(edge.through, this.nodes);
 
       edge.through = Object.assign({}, throughNode);
       edge.from = returnObj;
