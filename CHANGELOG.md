@@ -1,9 +1,9 @@
 Changelog
 ----
 
-###
-- Commit: ``
-- Author: Tom Bremer <tom@tbremer.com>
+### Tue Jan 10 10:33:59 2017 -0600
+- Commit: `6fdf1043def44abc2aeb900ccd39fc564b3b7d1d`
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version 2.0.0
 
 #### Changes
@@ -17,7 +17,7 @@ Changelog
 
 ### Thu Jan 5 14:52:24 2017 -0600
 - Commit: `b365d55c68fb83f6f42a676ba753b7aec83c3dcb`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.4.2
 
 #### Changes
@@ -27,7 +27,7 @@ Changelog
 
 ### Thu Jan 5 01:16:07 2017 -0600
 - Commit: `1bb3ec4808bea50b01a8ecfb8db2ed2c98d8cbcb`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.4.1
 
 #### Changes
@@ -35,7 +35,7 @@ Changelog
 
 ### Thu Jan 5 00:51:59 2017 -0600
 - Commit: `b8ef6a2a58931916df75951c1d2fcc69b0e95d89`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.4.0
 
 #### Changes
@@ -50,7 +50,7 @@ Changelog
 
 ### Wed Jan 4 13:29:17 2017 -0600
 - Commit: `93748aa95fe81ef6435b3ab839a5202ee28f25c5`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.3.0
 
 #### Changes:
@@ -58,7 +58,7 @@ Changelog
 
 ### Wed Jan 4 12:58:32 2017 -0600
 - Commit: `1e5ef48025c32588fd183ab7274b231d245bb460`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.2.0
 
 #### Changes:
@@ -69,7 +69,7 @@ Changelog
 
 ### Tue Jan 3 12:50:55 2017 -0600
 - Commit: `b0d761352551c95738f0690052283c7de1051276`
-- Author: Tom Bremer <tom@tbremer.com>
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
 - Version: 1.1.0
 
 #### Changes:
