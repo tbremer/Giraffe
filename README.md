@@ -126,7 +126,6 @@ export default db;
 - When `db.query` returns `from` and `through` are references to the `Node`'s they represent
 
 ## Coming Features
-1. Nested Queries
-1. Better `Node` & `Id` creation
-1. Typescript?
-1. ???
+Checkout out the [TODO Project](https://github.com/tbremer/Giraffe/projects/1) on Github.
+1. Complex Queries.
+1. Investigate Typescript.
