@@ -1,6 +1,6 @@
 {
   "name": "giraffe",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Lightweight Graph DB implementation",
   "main": "dist/bundle.js",
   "scripts": {
