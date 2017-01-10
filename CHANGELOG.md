@@ -12,6 +12,8 @@ Changelog
 - Introduce a GUUID generator.
 - Create `findById` and `findIndexById` functions.
 - Testing for all of the above
+- Update READNE
+- Update `devDependencies`
 
 ### Thu Jan 5 14:52:24 2017 -0600
 - Commit: `b365d55c68fb83f6f42a676ba753b7aec83c3dcb`

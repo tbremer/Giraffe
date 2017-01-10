@@ -98,7 +98,7 @@ export default db;
 ### Node
 ```javascript
 {
-  identity: Number,
+  identity: <UUID />,
   properties: Object,
   labels: Array,
   edges: Array,
@@ -112,7 +112,7 @@ export default db;
 ### Edge
 ```javascript
 {
-  identity: Number,
+  identity: <UUID />,
   from: <Node Identity /> || <Node />,
   through: <Node Identity /> || <Node />,
   label: String,
