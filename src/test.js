@@ -121,7 +121,8 @@ describe('Giraffe', () => {
         db.remove(node);
 
         expect(callback).toHaveBeenCalled();
-        expect(callback).toHaveBeenCalledWith('remove');
+
+        expect(callback).toHaveBeenCalledWith('remove', [ node ]);
       });
 
       it('calls callback on `edge`', () => {

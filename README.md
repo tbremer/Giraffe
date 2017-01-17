@@ -95,6 +95,19 @@ export default db;
 }
 ```
 
+### Callback
+The `callback` passed to your DB instance is called before the return statement of every method. That is to say `db.create` returns the created `Node`, but just before that return you `callback` is fired.
+
+The calls are all identical it is called with the `Type` of request and the modified, added, or removed data.
+
+| method | type     | data                            |
+| ------ | -------- | ------------------------------- |
+| Create | 'create' | `Node`                          |
+| Remove | 'remove' | Array[`Node`]                   |
+| Edge   | 'edge'   | Array[`Edge`]                   |
+| Query  | 'query'  | Array[`Query Result`]           |
+| Update | 'update' | Array[`Updated Nodes / Edges`]  |
+
 ### Node
 ```javascript
 {

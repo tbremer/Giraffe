@@ -1,6 +1,17 @@
 Changelog
 ----
 
+###
+- Commit: ``
+- Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
+- Version 2.1.0
+
+#### Changes
+- Add changed data to callback for `remove` method
+- Update test
+- Update README to show the callback table.
+
+
 ### Tue Jan 10 10:38:54 2017 -0600
 - Commit: `c5beec827944a4e1d5e50b375f729796cbe0a9bf`
 - Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))

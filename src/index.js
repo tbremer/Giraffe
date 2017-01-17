@@ -122,10 +122,13 @@ Giraffe.prototype.update = function nodes (nodes, labels, data) {
 
 Giraffe.prototype.remove = function remove (nodes) {
   if (nodes.constructor !== Array) nodes = [ nodes ];
+  const removed = [];
 
   for (const n in nodes) {
     const node = nodes[n];
     const { identity } = node;
+
+    removed.push(node);
 
     /**
      * Removes all of this node's edges
@@ -191,7 +194,7 @@ Giraffe.prototype.remove = function remove (nodes) {
     this.nodes.splice(findIndexById(identity, this.nodes), 1);
   }
 
-  if (this.callback) this.callback('remove');
+  if (this.callback) this.callback('remove', removed);
 };
 
 Giraffe.prototype.edge = function edge (from, through, label, data) {
