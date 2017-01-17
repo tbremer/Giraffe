@@ -1,10 +1,18 @@
 Changelog
 ----
 
+### Tue Jan 17 15:26:43 2017 -0600
+- Commit: `c53b6ef61ffdd247f4d4ae292257311927a3ff06`
+- Author: Tom Bremer <tom@tbremer.com>
+- Version: 2.1.1
+
+#### Changes
+- Fixes bug introduced when importing `Node` or `Edge` types.
+
 ### Tue Jan 17 12:42:20 2017 -0600
 - Commit: `b1a28b229c6801a8a59b45425d48b83ce3cf5279`
 - Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
-- Version 2.1.0
+- Version: 2.1.0
 
 #### Changes
 - Add changed data to callback for `remove` method
@@ -15,7 +23,7 @@ Changelog
 ### Tue Jan 10 10:38:54 2017 -0600
 - Commit: `c5beec827944a4e1d5e50b375f729796cbe0a9bf`
 - Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
-- Version 2.0.1
+- Version: 2.0.1
 
 #### Changes
 - Update README with new TODO Project
@@ -24,7 +32,7 @@ Changelog
 ### Tue Jan 10 10:33:59 2017 -0600
 - Commit: `6fdf1043def44abc2aeb900ccd39fc564b3b7d1d`
 - Author: Tom Bremer ([tom@tbremer.com](tom@tbremer.com))
-- Version 2.0.0
+- Version: 2.0.0
 
 #### Changes
 - Update `Node` & `Edge` id creation.
