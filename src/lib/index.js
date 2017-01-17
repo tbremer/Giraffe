@@ -36,9 +36,9 @@ export function ensureObjectsShape(objects, shape) {
     const object = objects[idx];
 
     for (const key in shape) {
-      if (!(key in object) || object[key].constructor !== shape[key]) {
-        throw new Error(`Incorrect shape for ${JSON.stringify(object)}`);
-      }
+      const _constructor = shape[key].constructor === Array ? shape[key] : [ shape[key] ];
+
+      if (!(key in object) || _constructor.indexOf(object[key].constructor) === -1) throw new Error(`Incorrect shape for ${JSON.stringify(object)}`);
     }
   }
 

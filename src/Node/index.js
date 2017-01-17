@@ -1,3 +1,5 @@
+const validConstructors = [ String, Number ];
+
 export default function Node({ id, label, data }) {
   if (!id && id !== 0) throw new Error(`All Node's require an id`);
   this.identity = id;
@@ -7,7 +9,7 @@ export default function Node({ id, label, data }) {
 }
 
 export const shape = {
-  identity: Number,
+  identity: validConstructors,
   properties: Object,
   labels: Array,
   edges: Array

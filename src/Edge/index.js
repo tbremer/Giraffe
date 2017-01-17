@@ -15,9 +15,9 @@ export default function Edge({ from, through, id, data, label }) {
 }
 
 export const shape = {
-  identity: Number,
+  identity: validConstructors,
   properties: Object,
   label: String,
-  from: Number,
-  through: Number
+  from: validConstructors,
+  through: validConstructors
 };
