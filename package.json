@@ -3,12 +3,18 @@
   "version": "2.1.1",
   "description": "Lightweight Graph DB implementation",
   "main": "dist/bundle.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
   "scripts": {
-    "prepublish": "rollup -c && MIN=true rollup -c",
-    "build": "rollup -c",
+    "prepublish": "yarn build",
+    "build": "yarn build:es && yarn build:commonjs && yarn build:umd && yarn build:umd:min",
+    "build:es": "BABEL_ENV=es babel src --out-dir es/",
+    "build:commonjs": "BABEL_ENV=commonjs babel src --out-dir lib/",
+    "build:umd": "BABEL_ENV=umd webpack",
+    "build:umd:min": "NODE_ENV=production BABEL_ENV=umd webpack -p",
     "pretest": "eslint src/",
-    "test": "mocha --compilers js:babel-register --recursive src/",
-    "test:watch": "mocha --compilers js:babel-register  --watch --reporter min --recursive src/"
+    "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive src/",
+    "test:watch": "NODE_ENV=test mocha --compilers js:babel-register  --watch --reporter min --recursive src/"
   },
   "repository": {
     "type": "git",
@@ -28,20 +34,22 @@
     "test"
   ],
   "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
     "babel-register": "^6.18.0",
     "eslint": "^3.13.1",
     "eslint-config-tbremer": "^1.2.1",
+    "eslint-plugin-import": "^2.2.0",
     "expect": "^1.20.2",
     "mocha": "^3.2.0",
     "pre-commit": "^1.2.2",
-    "rollup": "^0.41.1",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-uglify": "^1.0.1",
-    "rollup-watch": "^3.2.2"
+    "webpack": "^2.3.2"
+  },
+  "dependencies": {
+    "uuid": "^3.0.1"
   }
 }

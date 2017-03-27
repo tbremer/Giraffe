@@ -1,7 +1,6 @@
-lib/
 yarn.lock
-rollup.config.js
 .travis.yml
+.gitignore
 .eslintrc.json
 .editorconfig
 .babelrc

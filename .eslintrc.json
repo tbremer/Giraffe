@@ -1,5 +1,6 @@
 {
-  "extends": "tbremer",
+  "plugins": [ "import" ],
+  "extends": [ "tbremer", "plugin:import/errors", "plugin:import/warnings" ],
   "rules": {
     "max-params": [2, 4],
     "object-property-newline": [ 2, { "allowMultiplePropertiesPerLine": true } ],
