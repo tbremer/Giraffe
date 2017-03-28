@@ -49,4 +49,11 @@ describe('Node', () => {
     expect(expected).toInclude({ labels: [ 'Label' ] });
     expect(expected).toInclude({ properties: { foo: 'bar' } });
   });
+
+  it('takes multiple labels', () => {
+    const labels = [ 'Label', 'Node', 'Foo' ];
+    const expected = new Node(labels);
+
+    expect(expected).toInclude({ labels });
+  });
 });

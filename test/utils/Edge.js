@@ -20,8 +20,6 @@ describe('Edge', () => {
   });
 
   it('throws errors', () => {
-    const nodeA = new Node();
-    const nodeB = new Node();
     expect(() => new Edge())
     .toThrow('An Edge requires two sets of Nodes');
 
@@ -32,47 +30,82 @@ describe('Edge', () => {
     .toThrow('An Edge requires two sets of Nodes');
   });
 
-  xit('returns an array', () => {
-    const expected = new Edge();
+  it('returns an array', () => {
+    const expected = new Edge(nodeSetA, nodeSetB);
 
     expect(expected).toBeAn('array');
   });
 
-  xit('returns a correctly formed object', () => {
-    const expected = new Edge();
+  it('returns a correctly formed array', () => {
+    const expected = new Edge(nodeSetA, nodeSetB);
+    const [ head ] = expected;
 
-    expect(expected).toIncludeKeys([
+    expect(expected.length).toEqual(1);
+    expect(head).toIncludeKeys([
       '$type',
       'identity',
       'labels',
-      'edges',
+      'from',
+      'through',
       'properties'
     ]);
   });
 
-  xit('exports a type', () => {
+  it('exports a type', () => {
     expect($type).toBeA('string');
     expect($type).toBe('Edge');
   });
 
-  xit('returns empty labels', () => {
-    const expected = new Edge({ foo: 'bar' });
+  it('returns empty labels', () => {
+    const props = { foo: 'bar' };
+    const expected = new Edge(nodeSetA, nodeSetB, props);
+    const [ head ] = expected;
 
-    expect(expected).toInclude({ labels: [] });
-    expect(expected).toInclude({ properties: { foo: 'bar' } });
+    expect(expected.length).toEqual(1);
+    expect(head).toInclude({ labels: [] });
+    expect(head).toInclude({ properties: props });
   });
 
-  xit('returns empty props', () => {
-    const expected = new Edge('Label');
+  it('returns empty props', () => {
+    const label = 'Label';
+    const expected = new Edge(nodeSetA, nodeSetB, label);
+    const [ head ] = expected;
 
-    expect(expected).toInclude({ labels: [ 'Label' ] });
-    expect(expected).toInclude({ properties: {} });
+    expect(expected.length).toEqual(1);
+    expect(head).toInclude({ labels: [ label ] });
+    expect(head).toInclude({ properties: {} });
   });
 
-  xit('returns with label and props', () => {
-    const expected = new Edge('Label', { foo: 'bar' });
+  it('returns with label and props', () => {
+    const label = 'Label';
+    const props = { foo: 'bar' };
+    const expected = new Edge(nodeSetA, nodeSetB, label, props);
+    const [ head ] = expected;
 
-    expect(expected).toInclude({ labels: [ 'Label' ] });
-    expect(expected).toInclude({ properties: { foo: 'bar' } });
+    expect(expected.length).toEqual(1);
+    expect(head).toInclude({ labels: [ label ] });
+    expect(head).toInclude({ properties: props });
+  });
+
+  it('allows for multiple labels', () => {
+    const labels = [ 'Label', 'Foo', 'Bar' ];
+    const props = { foo: 'bar' };
+    const expected = new Edge(nodeSetA, nodeSetB, labels, props);
+    const [ head ] = expected;
+
+    expect(expected.length).toEqual(1);
+    expect(head).toInclude({ labels });
+    expect(head).toInclude({ properties: props });
+  });
+
+  it('joins multiple', () => {
+    const randNum = Math.round(Math.random() * 100);
+    const randNum2 = Math.round(Math.random() * 100);
+    nodeSetA = [ ...new Array(randNum) ].map((item, idx) => new Node('Item', { id: idx }));
+    nodeSetB = [ ...new Array(randNum2) ].map((item, idx) => new Node('Item', { id: idx }));
+
+    const expected = new Edge(nodeSetA, nodeSetB);
+
+    expect(expected.length).toBe((randNum * randNum2));
   });
 });
