@@ -6,6 +6,17 @@
     "object-property-newline": [ 2, { "allowMultiplePropertiesPerLine": true } ],
     "newline-after-var": 0,
     "max-depth": [2, 7],
-    "brace-style": [2, "stroustrup" ]
+    "brace-style": [2, "stroustrup" ],
+    "operator-linebreak": [
+      1,
+      "none",
+      {
+        "overrides": {
+          "?": "after",
+          ":": "after",
+          "||": "ignore"
+        }
+      }
+    ]
   }
 }
