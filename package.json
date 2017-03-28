@@ -13,8 +13,8 @@
     "build:umd": "BABEL_ENV=umd webpack",
     "build:umd:min": "NODE_ENV=production BABEL_ENV=umd webpack -p",
     "pretest": "eslint src/",
-    "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive src/",
-    "test:watch": "NODE_ENV=test mocha --compilers js:babel-register  --watch --reporter min --recursive src/"
+    "test": "NODE_ENV=test mocha --compilers js:babel-register --recursive test/",
+    "test:watch": "NODE_ENV=test mocha --compilers js:babel-register  --watch --reporter min --recursive test/"
   },
   "repository": {
     "type": "git",
