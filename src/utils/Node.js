@@ -19,5 +19,3 @@ export default function Node (lbl, props) {
     properties
   });
 }
-
-export { $type };

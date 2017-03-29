@@ -1,5 +1,5 @@
 import expect from 'expect';
-import Node, { $type } from '../../src/utils/Node';
+import Node from '../../src/utils/Node';
 
 describe('Node', () => {
   it('is a function', () => {
@@ -22,11 +22,7 @@ describe('Node', () => {
       'edges',
       'properties'
     ]);
-  });
-
-  it('exports a type', () => {
-    expect($type).toBeA('string');
-    expect($type).toBe('Node');
+    expect(expected).toInclude({ $type: 'Node' });
   });
 
   it('returns empty labels', () => {

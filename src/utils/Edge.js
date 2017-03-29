@@ -14,7 +14,9 @@ export default function Edge (nodeSetA, nodeSetB, lbl, props) {
     nodeSetB === undefined ||
     nodeSetB === null ||
     nodeSetA.length === 0 ||
-    nodeSetB.length === 0
+    nodeSetB.length === 0 ||
+    !nodeSetA ||
+    !nodeSetB
   ) {
     throw new Error('An Edge requires two sets of Nodes');
   }
@@ -43,5 +45,3 @@ export default function Edge (nodeSetA, nodeSetB, lbl, props) {
     return all;
   }, returnArr), returnArr);
 }
-
-export { $type };

@@ -1,6 +1,6 @@
 import expect from 'expect';
 import Node from '../../src/utils/Node';
-import Edge, { $type } from '../../src/utils/Edge';
+import Edge from '../../src/utils/Edge';
 
 describe('Edge', () => {
   let nodeA, nodeB, nodeSetA, nodeSetB;
@@ -11,6 +11,7 @@ describe('Edge', () => {
     nodeSetA = [ nodeA ];
     nodeSetB = [ nodeB ];
   });
+
   afterEach(() => {
     nodeA = nodeB = nodeSetA = nodeSetB = undefined;
   });
@@ -49,11 +50,7 @@ describe('Edge', () => {
       'through',
       'properties'
     ]);
-  });
-
-  it('exports a type', () => {
-    expect($type).toBeA('string');
-    expect($type).toBe('Edge');
+    expect(head).toInclude({ $type: 'Edge' });
   });
 
   it('returns empty labels', () => {
@@ -99,8 +96,8 @@ describe('Edge', () => {
   });
 
   it('joins multiple', () => {
-    const randNum = Math.round(Math.random() * 100);
-    const randNum2 = Math.round(Math.random() * 100);
+    const randNum = Math.ceil(Math.random() * 10);
+    const randNum2 = Math.ceil(Math.random() * 10);
     nodeSetA = [ ...new Array(randNum) ].map((item, idx) => new Node('Item', { id: idx }));
     nodeSetB = [ ...new Array(randNum2) ].map((item, idx) => new Node('Item', { id: idx }));
 
