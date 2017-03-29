@@ -1,7 +1,5 @@
-const toString = Object.prototype.toString;
-
 function isGeneric(reg=/Object/, obj) {
-  return reg.test(toString.call(obj));
+  return reg.test(Object.prototype.toString.call(obj));
 }
 
 function isArray(obj) {
