@@ -40,3 +40,4 @@ jspm_packages
 dist/
 es/
 lib/
+.coveralls.yml
