@@ -15,7 +15,7 @@
     "pretest": "eslint src/",
     "test": "BABEL_ENV=test mocha --compilers js:babel-register --recursive test/",
     "test:watch": "BABEL_ENV=test mocha --compilers js:babel-register  --watch --reporter min --recursive test/",
-    "coverage": "BABEL_ENV=test babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha --report lcovonly --check-coverage -- --compilers js:babel-register --recursive test/",
+    "coverage": "BABEL_ENV=test babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha --report text --check-coverage -- --compilers js:babel-register --recursive test/",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
   "repository": {

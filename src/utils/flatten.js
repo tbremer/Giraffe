@@ -1,6 +1,7 @@
 import { isArray } from './isType';
 
 export default function flatten(arr, flat = []) {
+  if (!isArray(arr)) throw new TypeError('Flatten only takes an array as it\'s input');
   // if array is empty, it's flat and return;
   if (!arr.length) return flat;
 
