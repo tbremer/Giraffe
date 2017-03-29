@@ -54,14 +54,5 @@
   },
   "dependencies": {
     "uuid": "^3.0.1"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "src/**/*.js",
-      "data-cover-never": [
-        "node_modules",
-        "test"
-      ]
-    }
   }
 }
